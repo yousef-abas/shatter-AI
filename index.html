@@ -12,6 +12,9 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;800;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- مكتبة لتنسيق الأكواد البرمجية بشكل احترافي -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
     <style>
         :root {
             --primary: #6366f1;
@@ -38,7 +41,7 @@
             animation: float 20s infinite linear;
         }
         @keyframes float {
-            0% { transform: translateY(100vh) rotate(0deg); opacity: 0; }
+            0 { transform: translateY(100vh) rotate(0deg); opacity: 0; }
             10% { opacity: 1; }
             90% { opacity: 1; }
             100% { transform: translateY(-100vh) rotate(720deg); opacity: 0; }
@@ -80,12 +83,12 @@
             to { opacity: 1; transform: translateY(0); }
         }
         .markdown-content h1, .markdown-content h2, .markdown-content h3 {
-            color: #818cf8; font-weight: 800; margin: 12px 0 6px; font-size: 1rem;
+            color: #818cf8; font-weight: 800; margin: 12px 0 6px; font-size: 1.1rem;
         }
         .markdown-content p { margin: 6px 0; line-height: 1.7; }
-        .markdown-content ul, .markdown-content ol { margin: 6px 0; padding-right: 16px; }
-        .markdown-content li { margin: 3px 0; }
-        .markdown-content strong { color: #a5b4fc; }
+        .markdown-content ul, .markdown-content ol { margin: 6px 0; padding-right: 20px; list-style-type: cubic-bezier(); }
+        .markdown-content li { margin: 4px 0; }
+        .markdown-content strong { color: #a5b4fc; font-weight: 700; }
         .markdown-content code {
             background: rgba(99, 102, 241, 0.15); color: #c7d2fe;
             padding: 2px 6px; border-radius: 4px; font-family: monospace; font-size: 0.85em;
@@ -93,24 +96,24 @@
         .markdown-content pre {
             background: #0f172a; border: 1px solid rgba(99, 102, 241, 0.2);
             border-radius: 10px; padding: 12px; overflow-x: auto;
-            margin: 10px 0; direction: ltr; text-align: left; font-size: 0.8rem;
+            margin: 10px 0; direction: ltr; text-align: left; font-size: 0.85rem;
         }
-        .markdown-content pre code { background: transparent; padding: 0; }
+        .markdown-content pre code { background: transparent; padding: 0; color: #f8fafc; }
         .markdown-content blockquote {
-            border-right: 3px solid #6366f1; padding-right: 12px;
-            margin: 10px 0; color: #94a3b8; font-style: italic;
+            border-right: 4px solid #6366f1; padding-right: 12px;
+            margin: 10px 0; color: #94a3b8; font-style: italic; background: rgba(255,255,255,0.02);
         }
         .toast {
-            position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%) translateY(100px);
+            position: fixed; bottom: 100px; left: 50%; transform: translateX(-50%) translateY(100px);
             background: rgba(15, 23, 42, 0.95); backdrop-filter: blur(20px);
             border: 1px solid rgba(255,255,255,0.1); border-radius: 16px;
             padding: 14px 24px; color: white; font-weight: 600; font-size: 13px;
             box-shadow: 0 20px 40px rgba(0,0,0,0.4);
             transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             z-index: 1000; display: flex; align-items: center; gap: 10px;
-            max-width: 90vw;
+            max-width: 90vw; opacity: 0; pointer-events: none;
         }
-        .toast.show { transform: translateX(-50%) translateY(0); }
+        .toast.show { transform: translateX(-50%) translateY(0); opacity: 1; pointer-events: auto; }
         .sidebar {
             position: fixed; top: 0; right: -100%; width: 85%; max-width: 320px; height: 100vh;
             background: rgba(15, 23, 42, 0.98); backdrop-filter: blur(30px);
@@ -221,10 +224,10 @@
             <p class="text-[10px] text-slate-500 font-bold uppercase tracking-wider mb-3">الموديل</p>
             <select id="modelSelect" onchange="saveModel()" class="w-full bg-white/5 border border-white/10 rounded-xl px-3 py-2 text-xs text-slate-300 outline-none">
                 <option value="openai">🧠 GPT-4o (سريع)</option>
-                <option value="claude">🎯 Claude 3.5 (قوي)</option>
-                <option value="gemini">💎 Gemini Pro</option>
+                <option value="mistral">🎯 Mistral Large</option>
+                <option value="llama">💎 Llama 3.3 70b</option>
                 <option value="deepseek">⚡ DeepSeek V3</option>
-                <option value="qwen">🔥 Qwen 3 Coder</option>
+                <option value="qwen">🔥 Qwen 2.5 Coder</option>
             </select>
         </div>
 
@@ -275,10 +278,10 @@
                     <button onclick="quickAsk('اكتبلي وصفة كشري مصري')" class="suggestion-chip">
                         <i class="fas fa-utensils text-indigo-400"></i> طبخ
                     </button>
-                    <button onclick="quickAsk('فكرني بأهم أحداث 2025')" class="suggestion-chip">
+                    <button onclick="quickAsk('فكرني بأهم أحداث السنة دي')" class="suggestion-chip">
                         <i class="fas fa-globe text-indigo-400"></i> تاريخ
                     </button>
-                    <button onclick="quickAsk('اكتبلي إيميل رسمي للمدير')" class="suggestion-chip">
+                    <button onclick="quickAsk('اكتبلي إيميل رسمي للمدير اعتذار عن غياب')" class="suggestion-chip">
                         <i class="fas fa-envelope text-indigo-400"></i> إيميل رسمي
                     </button>
                     <button onclick="quickAsk('اشرحلي الـ React Hooks')" class="suggestion-chip">
@@ -307,20 +310,15 @@
     </div>
 
     <script>
-        // ==================== POLLINATIONS AI API ====================
-        // FREE API - No key needed, no signup, no limits!
+        // ==================== POLLINATIONS AI API WITH STREAMING ====================
         const API_URL = 'https://text.pollinations.ai';
-
         const SYSTEM_PROMPT = 'You must ALWAYS reply in friendly, street-smart Egyptian slang (العامية المصرية). Keep answers helpful, clear, and professional, but tone it like a clever Egyptian developer talking to his close friend. Use structured lists, bold text, and phrases like "يا حبيب أخوك", "بص بقا", "يا صاحبي", "ركز معايا". Always format code blocks properly with language tags.';
 
-        // ==================== STATE ====================
         let chats = JSON.parse(localStorage.getItem('shatter_chats') || '[]');
         let currentChatId = null;
         let isLoading = false;
 
-        // ==================== INIT ====================
         function init() {
-            // Create particles
             const container = document.getElementById('particles');
             for (let i = 0; i < 25; i++) {
                 const p = document.createElement('div');
@@ -340,12 +338,9 @@
             } else {
                 loadChat(chats[0].id);
             }
-
             renderChatList();
-            document.getElementById('messageInput').focus();
         }
 
-        // ==================== CHAT MANAGEMENT ====================
         function createNewChat() {
             const chat = {
                 id: Date.now().toString(),
@@ -363,7 +358,7 @@
 
         function newChat() {
             createNewChat();
-            toggleSidebar();
+            if(document.getElementById('sidebar').classList.contains('open')) toggleSidebar();
             showToast('محادثة جديدة! 🎉');
         }
 
@@ -372,16 +367,21 @@
             const chat = chats.find(c => c.id === chatId);
             if (!chat) return;
 
-            document.getElementById('welcomeScreen').classList.add('hidden');
+            const welcome = document.getElementById('welcomeScreen');
             const container = document.getElementById('messagesContainer');
-            container.classList.remove('hidden');
-            container.innerHTML = '';
+            
+            if(chat.messages.length === 0) {
+                welcome.classList.remove('hidden');
+                container.classList.add('hidden');
+            } else {
+                welcome.classList.add('hidden');
+                container.classList.remove('hidden');
+                container.innerHTML = '';
+                chat.messages.forEach(msg => renderMessage(msg.role, msg.content, msg.id));
+            }
 
-            chat.messages.forEach(msg => renderMessage(msg.role, msg.content));
-
-            document.getElementById('modelSelect').value = chat.model;
-            updateModelBadge(chat.model);
-
+            document.getElementById('modelSelect').value = chat.model || 'openai';
+            updateModelBadge(chat.model || 'openai');
             renderChatList();
             scrollToBottom();
         }
@@ -394,7 +394,7 @@
             }
             list.innerHTML = chats.map(chat => {
                 const isActive = chat.id === currentChatId;
-                const title = chat.messages[0]?.content?.substring(0, 30) || chat.title;
+                const title = chat.title || 'محادثة جديدة';
                 const date = new Date(chat.createdAt).toLocaleDateString('ar-EG');
                 return `
                     <div class="chat-item ${isActive ? 'active' : ''}" onclick="loadChat('${chat.id}')">
@@ -417,23 +417,26 @@
             chats = [];
             saveChats();
             createNewChat();
-            renderChatList();
             showToast('تم مسح كل المحادثات 🗑️');
         }
 
-        // ==================== MESSAGING ====================
         function quickAsk(text) {
             document.getElementById('messageInput').value = text;
             sendMessage();
         }
 
+        // ==================== STREAMING ENGINE (أهم تعديل) ====================
         async function sendMessage() {
             const input = document.getElementById('messageInput');
             const text = input.value.trim();
-
             if (!text || isLoading) return;
 
-            addMessage('user', text);
+            // إخفاء شاشة الترحيب
+            document.getElementById('welcomeScreen').classList.add('hidden');
+            document.getElementById('messagesContainer').classList.remove('hidden');
+
+            // 1. إضافة رسالة المستخدم
+            addMessageData('user', text);
             input.value = '';
 
             isLoading = true;
@@ -442,71 +445,87 @@
             btn.classList.add('loading');
             icon.className = 'fas fa-spinner fa-spin';
 
-            const loadingId = 'loading-' + Date.now();
-            addMessage('assistant', '<div class="flex items-center gap-2"><span class="typing-dot"></span><span class="typing-dot"></span><span class="typing-dot"></span></div>', loadingId);
+            // 2. إنشاء مكان لرد البوت فارغ لعمل الـ Stream
+            const aiMessageId = Date.now().toString();
+            renderMessage('assistant', '', aiMessageId);
+            scrollToBottom();
+
+            const bubbleElement = document.getElementById(aiMessageId).querySelector('.markdown-content');
+            let fullResponse = '';
 
             try {
-                const response = await fetchAIResponse(text);
-                removeMessage(loadingId);
-                addMessage('assistant', response);
-                showToast('الرد جاهز! ✨');
+                const model = document.getElementById('modelSelect').value;
+                const currentChat = chats.find(c => c.id === currentChatId);
+                
+                // بناء تاريخ المحادثة لإرساله للبوت ليفتكر الكلام
+                const history = currentChat.messages.slice(0, -1).map(m => ({role: m.role, content: m.content}));
+                
+                // طلب الـ Stream بـ GET أو POST مع تمرير stream=true
+                const response = await fetch(API_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        messages: [
+                            { role: 'system', content: SYSTEM_PROMPT },
+                            ...history
+                        ],
+                        model: model,
+                        stream: true // تفعيل ميزة التدفق الحرفي
+                    })
+                });
+
+                if (!response.ok) throw new Error("عطل في السيرفر");
+
+                const reader = response.body.getReader();
+                const decoder = new TextDecoder();
+
+                while (true) {
+                    const { value, done } = await reader.read();
+                    if (done) break;
+                    
+                    const chunk = decoder.decode(value);
+                    fullResponse += chunk;
+                    
+                    // تحديث الواجهة فورياً
+                    bubbleElement.innerHTML = renderMarkdown(fullResponse);
+                    // تلوين الأكواد البرمجية أثناء النزول
+                    bubbleElement.querySelectorAll('pre code').forEach((el) => hjs.highlightElement(el));
+                    scrollToBottom();
+                }
+
+                // 3. حفظ الرد النهائي في الداتا بعد اكتماله
+                saveAiMessageData(aiMessageId, fullResponse);
+
             } catch (error) {
-                removeMessage(loadingId);
-                addMessage('assistant', `**يا حبيب أخوك، حصلت مشكلة!** 😅\n\n${error.message}\n\nجرب تسأل تاني كمان شوية.`);
-                showToast('الموديل مش متاح دلوقتي', 'error');
+                console.error(error);
+                bubbleElement.innerHTML = `<span class="text-rose-400">**يا حبيب أخوك حصل عطل فني في السيرفر! جرب تاني كده..**</span>`;
             } finally {
                 isLoading = false;
                 btn.classList.remove('loading');
                 icon.className = 'fas fa-paper-plane';
-                scrollToBottom();
+                renderChatList();
             }
         }
 
-        async function fetchAIResponse(query) {
-            const model = document.getElementById('modelSelect').value;
-
-            const response = await fetch(API_URL, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    messages: [
-                        { role: 'system', content: SYSTEM_PROMPT },
-                        { role: 'user', content: query }
-                    ],
-                    model: model,
-                    seed: Math.floor(Math.random() * 999999999),
-                    jsonMode: false
-                })
-            });
-
-            if (!response.ok) {
-                throw new Error(`HTTP ${response.status}: ${response.statusText}`);
-            }
-
-            const text = await response.text();
-            if (!text || text.length < 5) {
-                throw new Error('الرد فاضي من السيرفر');
-            }
-
-            return text;
-        }
-
-        function addMessage(role, content, id = null) {
+        function addMessageData(role, content) {
             const chat = chats.find(c => c.id === currentChatId);
             if (!chat) return;
-
-            const msg = { role, content, id: id || Date.now().toString(), timestamp: new Date().toISOString() };
-            chat.messages.push(msg);
-
+            const id = Date.now().toString();
+            chat.messages.push({ role, content, id, timestamp: new Date().toISOString() });
+            
             if (role === 'user' && chat.messages.filter(m => m.role === 'user').length === 1) {
-                chat.title = content.substring(0, 40);
+                chat.title = content.substring(0, 25) + '...';
             }
-
             saveChats();
-            renderMessage(role, content, msg.id);
-            scrollToBottom();
+            renderMessage(role, content, id);
+        }
+
+        function saveAiMessageData(id, content) {
+            const chat = chats.find(c => c.id === currentChatId);
+            if (chat) {
+                chat.messages.push({ role: 'assistant', content, id, timestamp: new Date().toISOString() });
+                saveChats();
+            }
         }
 
         function renderMessage(role, content, id) {
@@ -522,31 +541,19 @@
                         ${isUser ? escapeHtml(content) : renderMarkdown(content)}
                     </div>
                     ${!isUser ? `
-                        <div class="flex items-center gap-2 mt-3 pt-2 border-t border-white/5">
-                            <button onclick="copyMessage('${id}')" class="text-[10px] text-slate-500 hover:text-indigo-400 transition-colors flex items-center gap-1">
+                        <div class="flex items-center gap-2 mt-3 pt-2 border-t border-white/5 text-[10px]">
+                            <button onclick="copyMessage('${id}')" class="text-slate-500 hover:text-indigo-400 transition-colors flex items-center gap-1">
                                 <i class="fas fa-copy"></i> نسخ
-                            </button>
-                            <button onclick="regenerateMessage('${id}')" class="text-[10px] text-slate-500 hover:text-indigo-400 transition-colors flex items-center gap-1">
-                                <i class="fas fa-redo"></i> إعادة
                             </button>
                         </div>
                     ` : ''}
                 </div>
             `;
-
             container.appendChild(div);
+            div.querySelectorAll('pre code').forEach((el) => hljs.highlightElement(el));
         }
 
-        function removeMessage(id) {
-            const el = document.getElementById(id);
-            if (el) el.remove();
-            const chat = chats.find(c => c.id === currentChatId);
-            if (chat) {
-                chat.messages = chat.messages.filter(m => m.id !== id);
-                saveChats();
-            }
-        }
-
+        // تحسين الـ Markdown Parser ليعمل بشكل سليم وسريع
         function renderMarkdown(text) {
             return text
                 .replace(/^### (.*$)/gim, '<h3>$1</h3>')
@@ -554,12 +561,9 @@
                 .replace(/^# (.*$)/gim, '<h1>$1</h1>')
                 .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
                 .replace(/\*(.*?)\*/g, '<em>$1</em>')
-                .replace(/```(\w+)?\n([\s\S]*?)```/g, '<pre><code>$2</code></pre>')
+                .replace(/```(\w+)?\n([\s\S]*?)```/g, '<pre><code class="language-$1">$2</code></pre>')
                 .replace(/`([^`]+)`/g, '<code>$1</code>')
                 .replace(/^> (.*$)/gim, '<blockquote>$1</blockquote>')
-                .replace(/^\* (.*$)/gim, '<li>$1</li>')
-                .replace(/^\d+\. (.*$)/gim, '<li>$1</li>')
-                .replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" target="_blank" class="text-indigo-400 hover:text-indigo-300">$1</a>')
                 .replace(/\n/g, '<br>');
         }
 
@@ -573,26 +577,10 @@
             const chat = chats.find(c => c.id === currentChatId);
             const msg = chat?.messages.find(m => m.id === id);
             if (msg) {
-                navigator.clipboard.writeText(msg.content).then(() => showToast('تم النسخ! 📋'));
+                navigator.clipboard.writeText(msg.content).then(() => showToast('تم نسخ الرد بالكامل! 📋'));
             }
         }
 
-        function regenerateMessage(id) {
-            const chat = chats.find(c => c.id === currentChatId);
-            const msgIndex = chat?.messages.findIndex(m => m.id === id);
-            if (msgIndex > 0 && chat.messages[msgIndex - 1].role === 'user') {
-                const userQuery = chat.messages[msgIndex - 1].content;
-                removeMessage(id);
-                sendMessageWithText(userQuery);
-            }
-        }
-
-        async function sendMessageWithText(text) {
-            document.getElementById('messageInput').value = text;
-            await sendMessage();
-        }
-
-        // ==================== UI HELPERS ====================
         function toggleSidebar() {
             document.getElementById('sidebar').classList.toggle('open');
             document.getElementById('sidebarOverlay').classList.toggle('open');
@@ -602,21 +590,17 @@
             const model = document.getElementById('modelSelect').value;
             localStorage.setItem('shatter_model', model);
             updateModelBadge(model);
-
             const chat = chats.find(c => c.id === currentChatId);
-            if (chat) {
-                chat.model = model;
-                saveChats();
-            }
+            if (chat) { chat.model = model; saveChats(); }
         }
 
         function updateModelBadge(model) {
             const names = {
                 'openai': 'GPT-4o',
-                'claude': 'Claude 3.5',
-                'gemini': 'Gemini Pro',
-                'deepseek': 'DeepSeek',
-                'qwen': 'Qwen 3'
+                'mistral': 'Mistral Large',
+                'llama': 'Llama 3.3',
+                'deepseek': 'DeepSeek V3',
+                'qwen': 'Qwen 2.5'
             };
             document.getElementById('currentModel').textContent = names[model] || model;
         }
@@ -626,34 +610,22 @@
             area.scrollTo({ top: area.scrollHeight, behavior: 'smooth' });
         }
 
-        function showToast(message, type = 'success') {
+        function showToast(message) {
             const toast = document.getElementById('toast');
-            const icon = document.getElementById('toastIcon');
-            const msg = document.getElementById('toastMessage');
-
-            msg.innerText = message;
-            icon.className = type === 'error' ? 'fas fa-exclamation-circle text-rose-400' : 
-                            type === 'warning' ? 'fas fa-exclamation-triangle text-amber-400' :
-                            'fas fa-check-circle text-emerald-400';
-
+            document.getElementById('toastMessage').innerText = message;
             toast.classList.add('show');
             setTimeout(() => toast.classList.remove('show'), 3000);
         }
 
         function shareApp() {
             if (navigator.share) {
-                navigator.share({
-                    title: 'Shatter Search',
-                    text: 'جرب محرك البحث الذكي ده!',
-                    url: window.location.href
-                });
+                navigator.share({ title: 'Shatter Search', url: window.location.href });
             } else {
                 navigator.clipboard.writeText(window.location.href);
-                showToast('تم نسخ الرابط! 🔗');
+                showToast('تم نسخ رابط التطبيق! 🔗');
             }
         }
 
-        // ==================== EVENT LISTENERS ====================
         document.getElementById('messageInput').addEventListener('keydown', function(e) {
             if (e.key === 'Enter' && !e.shiftKey) {
                 e.preventDefault();
@@ -661,14 +633,6 @@
             }
         });
 
-        document.addEventListener('keydown', function(e) {
-            if (e.key === 'Escape') {
-                document.getElementById('sidebar').classList.remove('open');
-                document.getElementById('sidebarOverlay').classList.remove('open');
-            }
-        });
-
-        // Initialize
         init();
     </script>
 </body>
