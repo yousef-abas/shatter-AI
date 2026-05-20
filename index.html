@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Shatter Search</title>
+    <title>Shatter Search | مدعوم بـ Gemini</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
@@ -11,25 +11,28 @@
         .glass { background: rgba(15, 23, 42, 0.65); backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.06); }
     </style>
 </head>
-<body class="flex flex-col items-center justify-center p-4 md:p-8 bg-gradient-to-b from-slate-950 to-slate-900">
+<body class="flex flex-col items-center justify-center p-4 md:p-8 bg-gradient-to-b from-slate-950 to-slate-900 relative">
+
+    <!-- زرار مخفي للأدمن عشان يحط الكي بأمان -->
+    <button onclick="promptApiKey()" class="absolute top-4 left-4 text-[10px] text-slate-600 hover:text-slate-400">⚙️ إعدادات المفتاح</button>
 
     <main class="w-full max-w-3xl space-y-8 z-10 my-auto text-center">
         
         <!-- اللوجو -->
-        <div id="logo-zone">
+        <div>
             <h1 class="text-4xl md:text-6xl font-black text-transparent bg-clip-text bg-gradient-to-r from-white via-indigo-200 to-slate-400">
                 SHATTER SEARCH
             </h1>
-            <p class="text-xs text-indigo-400 font-bold mt-2">اكتب سؤالك والرد هيطلعلك بالبلدي في ثانية</p>
+            <p class="text-xs text-indigo-400 font-bold mt-2">محرك بحث ذكي حقيقي مدعوم بذكاء Gemini الفائق 🧠</p>
         </div>
 
         <!-- شريط البحث -->
         <div class="w-full glass rounded-2xl p-2 shadow-2xl">
             <div class="flex items-center gap-2">
-                <input type="text" id="searchInput" placeholder="اسأل عن كود، داتا، مبيعات، أو أي حاجة يا حبيب أخوك..." 
+                <input type="text" id="searchInput" placeholder="اسأل Gemini عن أي حاجة في الكون يا حبيب أخوك..." 
                     class="w-full bg-transparent py-4 px-4 outline-none text-sm md:text-base text-white placeholder-slate-500 font-medium text-right">
                 <button onclick="executeSearch()" class="bg-indigo-600 hover:bg-indigo-500 text-white px-6 py-4 rounded-xl text-xs md:text-sm font-bold transition-all whitespace-nowrap">
-                    بحث فوري 🚀
+                    اسأل الذكاء 🚀
                 </button>
             </div>
         </div>
@@ -37,51 +40,100 @@
         <!-- صندوق النتائج -->
         <div id="resultContainer" class="w-full hidden text-right">
             <div class="glass rounded-2xl p-6 md:p-8 shadow-xl">
-                <p class="text-xs font-bold text-indigo-400 mb-4 border-b border-white/5 pb-2">💡 الرد الفوري:</p>
-                <div id="responseText" class="text-sm md:text-base text-slate-200 leading-relaxed"></div>
+                <p class="text-xs font-bold text-indigo-400 mb-4 border-b border-white/5 pb-2">✨ تحليل وإجابة Gemini الحية:</p>
+                <div id="responseText" class="text-sm md:text-base text-slate-200 leading-relaxed space-y-2"></div>
             </div>
         </div>
 
     </main>
 
     <script>
-        function executeSearch() {
+        // بنجيب المفتاح السري متسيف من المتصفح عشان الأمان
+        let geminiKey = localStorage.getItem('gemini_api_key') || "";
+
+        function promptApiKey() {
+            let key = prompt("يا حبيب أخوك حط Gemini API Key بتاعك هنا عشان المحرك يشتغل (بيتحفظ في جهازك بس):", geminiKey);
+            if (key) {
+                geminiKey = key.trim();
+                localStorage.setItem('gemini_api_key', geminiKey);
+            }
+        }
+
+        // لو مفيش كي أول ما يفتح، بنطلبه منه فوراً
+        window.onload = function() {
+            if (!geminiKey) {
+                promptApiKey();
+            }
+        };
+
+        async function executeSearch() {
             var query = document.getElementById('searchInput').value.trim();
             if (!query) {
-                alert("اكتب حاجة الأول في مربع البحث يا صاحبي! 😉");
+                alert("اكتب سؤالك الأول يا صاحبي! 😉");
                 return;
             }
 
-            // إظهار صندوق النتائج
-            document.getElementById('resultContainer').classList.remove('hidden');
-            document.getElementById('responseText').innerHTML = "بص بقا.. جاري الفلترة والرد الفوري...";
-
-            // الكلمات المفتاحية والردود البسيطة
-            var q = query.toLowerCase();
-            var reply = "بص يا حبيب أخوك، سؤالك جامد بس أنا متبرمج محلياً دلوقتي عشان أساعدك في الأكواد والتصميم وقواعد البيانات (زي SQL و JavaScript و Tailwind). <br><br>جرب اكتب كلمة زي (SQL) أو (كود) أو (تصميم) وشوف العظمة!";
-
-            if (q.includes("sql") || q.includes("قاعدة") || q.includes("جدول")) {
-                reply = "بص بقا يا صاحبي، عشان تعمل استعلام SQL محترم يفلتر لك البيانات، الترتيب بيكون كدا:<br><pre class='bg-slate-950 p-4 rounded-xl text-indigo-300 font-mono text-xs my-2 text-left select-all overflow-x-auto'>SELECT item_id, status FROM inventory_levels WHERE status = 'In Stock';</pre>الـ WHERE بتفلتر الداتا والـ SELECT بتجيب العواميد اللي أنت عايزها بالظبط.";
-            } 
-            else if (q.includes("جافا") || q.includes("javascript") || q.includes("كود")) {
-                reply = "يا صاحبي الـ JavaScript هي أساس اللعبة! نصيحة برمجية على السريع: ابعد عن استخدام var تماماً في كودك، واشتغل دايماً بـ const للحاجات الثابتة و let للمتغيرات عشان كودك يكون نظيف ومفهوش أخطاء.";
-            } 
-            else if (q.includes("تصميم") || q.includes("tailwind") || q.includes("واجهة")) {
-                reply = "عايز واجهة فخمة؟ ركز معايا يا حبيب أخوك! عشان تعمل التأثير الزجاجي الشفاف بـ Tailwind CSS حط الكود ده في الـ Class:<br><code class='text-indigo-400 bg-slate-950 px-2 py-1 rounded font-mono text-xs'>bg-white/5 backdrop-blur-md border border-white/10</code>";
-            } 
-            else if (q.includes("سلام") || q.includes("ازيك") || q.includes("مرحبا") || q.includes("الو")) {
-                reply = "يا مرحب بحبيب أخوك! 😎 منور محرك بحث Shatter. قول لي بقا، إيه اللي واقف معاك النهاردة وعايزنا نظبطه سوا؟ اكتب سؤالك وعينيا ليك!";
+            if (!geminiKey) {
+                alert("لازم تحط الـ API Key بتاع جيمناي الأول عشان يشتغل! اضغط على الترس فوق على الشمال.");
+                return;
             }
 
-            // عرض النتيجة فوراً بدون أي تأخير
-            document.getElementById('responseText').innerHTML = reply;
+            // إظهار التحميل
+            document.getElementById('resultContainer').classList.remove('hidden');
+            document.getElementById('responseText').innerHTML = `
+                <div class="animate-pulse text-slate-400 text-xs">
+                    بص بقا.. بنكلم سيرفرات جوجل حالاً وبنجهز لك الإجابة الحية.. ثواني كدا...
+                </div>`;
+
+            try {
+                // الربط الرسمي والمباشر مع موديل Gemini 1.5 Flash السريع والقوي
+                const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${geminiKey}`;
+                
+                const response = await fetch(url, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({
+                        contents: [{
+                            parts: [{
+                                text: `You are Shatter Search, a brilliant AI. You must ALWAYS reply in friendly, street-smart Egyptian slang (العامية المصرية). Keep answers extremely helpful, clear, and professional, but tone it exactly like a clever Egyptian developer talking to his close friend. Use structured lists, bold text, and phrases like "يا حبيب أخوك", "بص بقا", "يا صاحبي", "ركز معايا". Here is the user question: ${query}`
+                            }]
+                        }]
+                    })
+                });
+
+                const data = await response.json();
+
+                if (!response.ok) {
+                    throw new Error(data.error?.message || "مشكلة في السيرفر");
+                }
+
+                // استخراج النص اللي رجع من جيمناي
+                let aiText = data.candidates[0].content.parts[0].text;
+                
+                // تنسيق النص عشان يظهر بشكل شيك
+                renderText(aiText);
+
+            } catch (error) {
+                document.getElementById('responseText').innerHTML = `
+                    <div class="text-xs text-red-400 bg-red-500/10 p-4 rounded-xl border border-red-500/20">
+                        يا حبيب أخوك حصل مشكلة! غالباً الـ API Key اللي دخلته غلط، أو جوجل مأكتفة حماية عليه. اتأكد منه وجرب تاني.
+                    </div>`;
+            }
         }
 
-        // تشغيل بالـ Enter من الكيبورد
+        function renderText(text) {
+            // تحويل السطور لبريكات HTML وتنسيق الكود والبولد
+            let formatted = text
+                .replace(/\n/g, '<br>')
+                .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+                .replace(/```(.*?)\n([\s\S]*?)```/g, '<pre class="bg-slate-950 p-4 rounded-xl font-mono text-xs text-indigo-300 my-3 overflow-x-auto border border-white/5 select-all text-left">$2</pre>');
+            
+            document.getElementById('responseText').innerHTML = formatted;
+        }
+
+        // تشغيل بالـ Enter
         document.getElementById('searchInput').addEventListener("keypress", function(e) {
-            if (e.key === "Enter") {
-                executeSearch();
-            }
+            if (e.key === "Enter") executeSearch();
         });
     </script>
 </body>
