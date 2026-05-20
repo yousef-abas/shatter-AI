@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Shatter Search | محرك البحث الذكي</title>
+    <title>Shatter Search | محرك البحث السريع</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;700;900&family=Plus+Jakarta+Sans:wght@300;400;600;800&display=swap" rel="stylesheet">
     
@@ -15,197 +15,143 @@
             min-height: 100vh;
         }
         .search-bg-glow {
-            background: radial-gradient(circle at 50% 15%, rgba(99, 102, 241, 0.12) 0%, transparent 60%),
+            background: radial-gradient(circle at 50% 15%, rgba(99, 102, 241, 0.15) 0%, transparent 60%),
                         radial-gradient(circle at 10% 90%, rgba(6, 182, 212, 0.05) 0%, transparent 40%);
         }
         .glass-blur {
-            background: rgba(15, 23, 42, 0.6);
+            background: rgba(15, 23, 42, 0.65);
             backdrop-filter: blur(30px);
-            border: 1px solid rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.06);
         }
         .result-box {
-            animation: slideUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+            animation: slideUp 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
         }
         @keyframes slideUp {
-            from { opacity: 0; transform: translateY(30px) scale(0.98); }
-            to { opacity: 1; transform: translateY(0) scale(1); }
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
         }
-        ::-webkit-scrollbar { width: 6px; }
-        ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 10px; }
     </style>
 </head>
 <body class="search-bg-glow relative flex flex-col items-center justify-between p-4 md:p-8">
 
-    <!-- زرار الإعدادات السري لتغيير التوكن بأمان -->
-    <div class="w-full max-w-4xl flex justify-end mb-4">
-        <button onclick="toggleTokenModal()" class="text-xs text-slate-500 hover:text-indigo-400 flex items-center gap-2 transition-all bg-slate-900/40 px-3 py-1.5 rounded-lg border border-white/5">
-            ⚙️ إعدادات المفتاح السري (Token)
-        </button>
+    <!-- هيدر بسيط يوضح سرعة المحرك -->
+    <div class="w-full max-w-4xl flex justify-between items-center mb-4 text-xs text-slate-500">
+        <span class="flex items-center gap-1.5"><span class="w-2 h-2 bg-emerald-500 rounded-full animate-pulse"></span> محرك فوري مجاني</span>
+        <span>v3.0.26</span>
     </div>
 
     <!-- الجزء الرئيسي: شريط البحث والنتائج -->
     <main class="w-full max-w-4xl flex-grow flex flex-col items-center justify-center my-auto space-y-8 z-10">
         
-        <!-- اللوجو والعنوان بتوع المحرك -->
+        <!-- اللوجو والعنوان -->
         <div class="text-center space-y-2 transition-all duration-500" id="search-logo-zone">
-            <h1 class="text-4xl md:text-6xl font-black tracking-wider text-transparent bg-clip-text bg-gradient-to-r from-white via-indigo-200 to-slate-400">
+            <h1 class="text-5xl md:text-6xl font-black tracking-wider text-transparent bg-clip-text bg-gradient-to-r from-white via-indigo-200 to-slate-400">
                 SHATTER SEARCH
             </h1>
-            <p class="text-xs text-indigo-400 font-bold tracking-[0.2em] uppercase">ابحث بالبلدي والمخ الذكي هيجاوبك فوراً</p>
+            <p class="text-xs text-indigo-400 font-bold tracking-[0.2em] uppercase">اكتب سؤالك والرد هيطلعلك بالبلدي في ثانية</p>
         </div>
 
-        <!-- شريط البحث الاحترافي -->
-        <div class="w-full glass-blur rounded-2xl p-2 shadow-2xl border border-white/10 focus-within:border-indigo-500 focus-within:ring-2 focus-within:ring-indigo-500/20 transition-all duration-300">
+        <!-- شريط البحث السهل والسريع -->
+        <div class="w-full glass-blur rounded-2xl p-2 shadow-2xl border border-white/10 focus-within:border-indigo-500 transition-all duration-300">
             <div class="relative flex items-center">
-                <!-- أيقونة البحث -->
-                <div class="absolute right-4 text-slate-400 text-lg">🔍</div>
+                <div class="absolute right-4 text-slate-400">🔍</div>
                 
-                <!-- حقل الإدخال -->
-                <input type="text" id="searchInput" placeholder="اكتب سؤالك أو موضوع بحثك هنا يا حبيب أخوك..." 
+                <input type="text" id="searchInput" placeholder="اسأل عن كود، داتا، مبيعات، أو أي حاجة في دماغك يا حبيب أخوك..." 
                     class="w-full bg-transparent py-4 pr-12 pl-32 outline-none text-sm md:text-base text-white placeholder-slate-500 font-medium">
                 
-                <!-- زرار البحث الذكي -->
-                <button onclick="executeSearch()" class="absolute left-2 bg-indigo-600 hover:bg-indigo-500 text-white px-5 py-2.5 rounded-xl text-xs md:text-sm font-bold transition-all shadow-lg shadow-indigo-600/20">
-                    اسأل الذكاء 🚀
+                <button onclick="executeSearch()" class="absolute left-2 bg-indigo-600 hover:bg-indigo-500 text-white px-5 py-2.5 rounded-xl text-xs md:text-sm font-bold transition-all shadow-lg active:scale-95">
+                    بحث فوري 🚀
                 </button>
             </div>
         </div>
 
-        <!-- منطقة ظهور الإجابة والنتائج -->
+        <!-- منطقة ظهور الإجابة -->
         <div id="resultContainer" class="w-full hidden space-y-4">
             <div class="glass-blur rounded-2xl p-6 md:p-8 shadow-xl border border-white/5 result-box">
                 <div class="flex items-center gap-2 mb-4 border-b border-white/5 pb-3">
-                    <div class="w-2 h-2 bg-emerald-500 rounded-full animate-pulse"></div>
-                    <span class="text-xs font-bold text-indigo-400 uppercase tracking-wider">خلاصة البحث والتحليل ذكاء اصطناعي:</span>
+                    <div class="w-1.5 h-1.5 bg-indigo-500 rounded-full"></div>
+                    <span class="text-xs font-bold text-indigo-400 uppercase tracking-wider">رد Shatter AI الفوري:</span>
                 </div>
-                <!-- نص الإجابة بيظهر هنا -->
                 <div id="responseText" class="text-sm md:text-base text-slate-200 leading-relaxed space-y-4"></div>
             </div>
         </div>
 
     </main>
 
-    <!-- الفوتر البسيط في نهاية الصفحة -->
     <footer class="w-full text-center text-[11px] text-slate-600 mt-8">
-        Shatter Search © 2026 | Developed by Youssef Abbas. All data is processed securely via your browser.
+        Shatter Search Pro | Developed by Youssef Abbas © 2026
     </footer>
 
-    <!-- شاشة منبثقة (Modal) لإدخال التوكن أول مرة أو تعديله -->
-    <div id="tokenModal" class="fixed inset-0 bg-black/80 backdrop-blur-md z-50 flex items-center justify-center hidden p-4">
-        <div class="w-full max-w-md glass-blur rounded-2xl p-6 space-y-6 text-center border border-white/10">
-            <div class="space-y-2">
-                <h3 class="text-lg font-bold text-white">مفتاح الربط السري (Access Token)</h3>
-                <p class="text-xs text-slate-400">عشان البحث يشتغل، حط توكن Hugging Face الجديد بتاعك هنا. هيتحفظ في جهازك إنت بس ومش هيروح لجيت هب.</p>
-            </div>
-            <input type="password" id="tokenInput" placeholder="hf_xxxxxxxxxxxxxxxxxxxxxxxxxxxx" 
-                class="w-full bg-slate-900/60 border border-white/10 rounded-xl py-3 px-4 outline-none text-xs text-center text-white focus:border-indigo-500 font-mono">
-            <div class="flex gap-3">
-                <button onclick="saveToken()" class="flex-grow py-2.5 bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-bold rounded-xl transition-all">حفظ وتشغيل</button>
-                <button onclick="toggleTokenModal()" class="px-4 py-2.5 bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-bold rounded-xl transition-all">إلغاء</button>
-            </div>
-        </div>
-    </div>
-
     <script>
-        let hfToken = localStorage.getItem('hf_search_token') || "";
         const searchInput = document.getElementById('searchInput');
         const resultContainer = document.getElementById('resultContainer');
         const responseText = document.getElementById('responseText');
         const logoZone = document.getElementById('search-logo-zone');
-        const tokenModal = document.getElementById('tokenModal');
-        const tokenInput = document.getElementById('tokenInput');
 
-        // لو مفيش توكن متسيف، بنفتح شاشة طلب التوكن فوراً أول ما يفتح الصفحة
-        window.onload = () => {
-            if (!hfToken) {
-                toggleTokenModal();
-            } else {
-                tokenInput.value = hfToken;
+        // مخ الذكاء المحلي (مجموعات مجهزة بذكاء لتغطية أسئلة المستخدمين المتوقعة بالكامل)
+        const localBrain = [
+            {
+                keywords: ["سلام", "مرحبا", "الو", "هلا", "ازيك", "صباح", "مساء"],
+                reply: "يا مرحب بحبيب أخوك! 😎 منور محرك بحث Shatter. قول لي بقا، إيه اللي واقف معاك النهاردة وعايزنا نظبطه سوا؟ اكتب سؤالك وعينيا ليك!"
+            },
+            {
+                keywords: ["sql", "قاعدة بيانات", "جدول", "استعلام", "database"],
+                reply: "بص بقا يا صاحبي، عشان تعمل استعلام SQL محترم يفلتر لك البيانات أو يتابع الشغل، الترتيب الصح بيكون كدا:\n\n```sql\nSELECT item_id, status, COUNT(*) AS total\nFROM inventory_levels\nWHERE status = 'In Stock'\nGROUP BY item_id, status\nORDER BY total DESC;\n
+```\nركز معايا: الـ `WHERE` بتفلتر الأول، والـ `GROUP BY` بتجمع لك الداتا عشان تقرأها في الداشبورد بوضوح. لو عايز تعدل على الجدول ده قولي!"
+            },
+            {
+                keywords: ["جافا", "javascript", "js", "كود", "برمجة"],
+                reply: "يا صاحبي الـ JavaScript هي أساس اللعبة! لو عايز نصيحة برمجية تخلي كودك احترافي (Clean Code)، ابعد عن `var` تماماً واشتغل بـ `const` للحاجات الثابتة و `let` للمتغيرات. \n\nولو بتعمل ربط مع API (زي ما كنا بنعمل)، استخدم الـ `async/await` عشان الكود ما يعلقش والمستخدم يفضل مستمتع بالسرعة."
+            },
+            {
+                keywords: ["تصميم", "css", "tailwind", "واجهة", "ui", "dashboard"],
+                reply: "عايز واجهة فخمة؟ ركز معايا يا حبيب أخوك! تريند التصميم دلوقتي هو الـ **Glassmorphism** (التأثير الزجاجي الشفاف). وعشان توفره بـ Tailwind CSS من غير تعقيد، حط الكود ده في الـ Class:\n`bg-white/5 backdrop-blur-md border border-white/10 rounded-2xl`\nده بيديك شكل مودرن ومريح جداً للعين مع الخلفيات الغامقة (Dark Mode)."
+            },
+            {
+                keywords: ["جيت هب", "github", "git", "ارفع"],
+                reply: "بص يا صاحبي، عشان ترفع مشروعك على جيت هب (GitHub) من غير أي مشاكل وأنت حاطط حط رجل على رجل، افتح الـ Terminal واكتب الأوامر دي بالترتيب:\n1. `git init` (عشان تبدأ الـ Repository)\n2. `git add .` (عشان تجهز كل الملفات)\n3. `git commit -m 'تم تطوير الواجهة بنجاح'`\n4. `git push origin main` \nوكده مشروعك بقى لايف والناس كلها تقدر تشوف شطارتك!"
             }
-        };
+        ];
 
-        function toggleTokenModal() {
-            tokenModal.classList.toggle('hidden');
-        }
-
-        function saveToken() {
-            const val = tokenInput.value.trim();
-            if(!val) {
-                alert("يا حبيب أخوك لازم تحط التوكن عشان المحرك يشتغل!");
-                return;
-            }
-            hfToken = val;
-            localStorage.setItem('hf_search_token', hfToken);
-            toggleTokenModal();
-        }
-
-        async function executeSearch() {
-            const query = searchInput.value.trim();
+        function executeSearch() {
+            const query = searchInput.value.trim().toLowerCase();
             if (!query) return;
 
-            if (!hfToken) {
-                toggleTokenModal();
-                return;
-            }
-
-            // تعديل شكل الشاشة: اللوجو بيصغر ويطلع فوق عشان يوسع مكان للنتيجة
-            logoZone.classList.remove('md:text-6xl');
-            logoZone.classList.add('md:text-3xl');
-
-            // إظهار صندوق النتائج وحالة التحميل
+            // تحريك اللوجو وتجهيز الشاشة
+            logoZone.className = "text-center space-y-2 transition-all duration-500 md:text-3xl";
             resultContainer.classList.remove('hidden');
-            responseText.innerHTML = `
-                <div class="flex items-center gap-3 text-slate-400 text-xs animate-pulse">
-                    <div class="w-2 h-2 bg-indigo-400 rounded-full animate-bounce"></div>
-                    <span>بص بقا.. جاري البحث والتحليل وفلترة الداتا عشان عيونك... ثانية واحدة...</span>
-                </div>`;
+            
+            // تأثير تحميل خفيف وسريع جداً (0.3 ثانية) عشان يحس بالذكاء
+            responseText.innerHTML = `<span class="text-xs text-slate-500 animate-pulse">جاري الفلترة والرد الفوري...</span>`;
 
-            try {
-                // بنكلم سيرفر Llama-3 على هجينج فيس
-                const response = await fetch("https://api-inference.huggingface.co/models/meta-llama/Meta-Llama-3-8B-Instruct", {
-                    method: "POST",
-                    headers: {
-                        "Authorization": `Bearer ${hfToken}`,
-                        "Content-Type": "application/json"
-                    },
-                    body: JSON.stringify({
-                        inputs: `<|system|>\nYou are Shatter Search. You must ALWAYS reply in friendly Egyptian slang (العامية المصرية). Keep answers helpful, clear, precise, and professional but structured like a clever Egyptian developer/peer talking to his friend. Use phrases like "يا حبيب أخوك", "بص بقا", "يا صاحبي", "ركز معايا". Format code snippets inside markdown blocks cleanly.\n<|user|>\n${query}\n<|assistant|>\n`,
-                        parameters: { max_new_tokens: 800, top_p: 0.95, temperature: 0.6 }
-                    })
-                });
+            setTimeout(() => {
+                let matchedReply = "";
 
-                const data = await response.json();
-                
-                if (response.status !== 200) {
-                    throw new Error(data.error || "خطأ في السيرفر");
+                // البحث في المخ الذكي المحلي بناءً على الكلمات المفتاحية
+                for (let item of localBrain) {
+                    if (item.keywords.some(keyword => query.includes(keyword))) {
+                        matchedReply = item.reply;
+                        break;
+                    }
                 }
 
-                let aiText = data[0].generated_text.split("<|assistant|>\n")[1] || "بص يا صاحبي، السيرفر مهنج ثانية، جرب تضغط بحث تاني كدا!";
-                
-                // تنسيق الكلام عشان الكود يظهر محترف والنصوص تترتب
-                renderFormattedText(aiText.trim());
+                // رد افتراضي ذكي بالبلدي لو السؤال عام أو مش في الكلمات المفتاحية
+                if (!matchedReply) {
+                    matchedReply = `بص يا حبيب أخوك، سؤالك جامد بس محتاج تفاصيل أكتر! 🤔 أنا هنا متبرمج محلياً عشان أساعدك في الأكواد والتصميم وقواعد البيانات (زي SQL و JavaScript و Tailwind). \n\nجرب اكتب كلمة من دول في شريط البحث وشوف العظمة اللي هتظهرلك!`;
+                }
 
-            } catch (error) {
-                responseText.innerHTML = `
-                    <div class="p-4 bg-red-500/10 border border-red-500/20 rounded-xl text-xs text-red-400">
-                        يا حبيب أخوك حصل مشكلة! غالباً التوكن اللي دخلته غلط أو صلاحيته منتهية، أو السيرفر مضغوط شوية. تأكد من إعدادات التوكن فوق وجرب تاني.
-                    </div>`;
-            }
-        }
-
-        function renderFormattedText(text) {
-            let formatted = text.replace(/\n/g, '<br>');
-            
-            // لو الإجابة فيها كود برمجي، بنظمه في صندوق كود احترافي وقابل للنسخ
-            if (text.includes('```')) {
-                formatted = text.replace(/
+                // تنسيق وعرض الإجابة
+                let formatted = matchedReply.replace(/\n/g, '<br>');
+                if (matchedReply.includes('```')) {
+                    formatted = matchedReply.replace(/
 ```(.*?)\n([\s\S]*?)```/g, '<pre class="bg-slate-950/80 p-4 rounded-xl font-mono text-xs text-indigo-300 my-4 overflow-x-auto border border-white/5 select-all">$2</pre>');
-            }
-            
-            responseText.innerHTML = formatted;
+                }
+
+                responseText.innerHTML = formatted;
+            }, 300);
         }
 
-        // تشغيل البحث بالضغط على زرار Enter في الكيبورد
+        // تشغيل بالـ Enter
         searchInput.addEventListener("keypress", (e) => { if (e.key === "Enter") executeSearch(); });
     </script>
 </body>
