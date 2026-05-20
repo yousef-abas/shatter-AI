@@ -228,9 +228,9 @@
         <div class="mt-4 pt-4 border-t border-white/5">
             <div class="flex items-center gap-2 text-[10px] text-slate-500">
                 <span class="status-dot"></span>
-                <span>المحرك متصل</span>
+                <span>المحرك متصل بالـ Worker</span>
             </div>
-            <p class="text-[10px] text-slate-600 mt-2">Powered by Groq API</p>
+            <p class="text-[10px] text-slate-600 mt-2">Secured via Cloudflare Workers</p>
         </div>
     </div>
 
@@ -298,15 +298,15 @@
                         <i class="fas fa-paper-plane" id="sendIcon"></i>
                     </button>
                 </div>
-                <p class="text-[10px] text-slate-600 text-center mt-2">Powered by Groq API - Ultra Fast</p>
+                <p class="text-[10px] text-slate-600 text-center mt-2">Powered by Groq API - Ultra Fast via Workers</p>
             </div>
         </div>
     </div>
 
     <script>
-        // ==================== GROQ API CONFIG ====================
-        const GROQ_API_KEY = "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";
-        const GROQ_URL = "https://api.groq.com/openai/v1/chat/completions";
+        // ==================== WORKER CONFIG ====================
+        // هنا حطينا رابط الـ Cloudflare Worker بتاعك اللي بيمرر لـ Groq بأمان وبدون مشاكل CORS
+        const GROQ_URL = "https://my-first-api.jsmith1233446.workers.dev/";
 
         const SYSTEM_PROMPT = "You must ALWAYS reply in friendly, street-smart Egyptian slang (العامية المصرية). Keep answers helpful, clear, and professional, but tone it like a clever Egyptian developer talking to his close friend. Use structured lists, bold text, and phrases like 'يا حبيب أخوك', 'بص بقا', 'يا صاحبي', 'ركز معايا'. Always format code blocks properly with language tags.";
 
@@ -457,20 +457,18 @@
         async function fetchAIResponse(query) {
             const model = document.getElementById("modelSelect").value;
 
+            // إرسال الطلب للـ Worker بدون الـ Authorization header لأن الـ Worker شايله جواه أساساً
             const response = await fetch(GROQ_URL, {
                 method: "POST",
                 headers: {
-                    "Content-Type": "application/json",
-                    "Authorization": "Bearer " + GROQ_API_KEY
+                    "Content-Type": "application/json"
                 },
                 body: JSON.stringify({
                     model: model,
                     messages: [
                         { role: "system", content: SYSTEM_PROMPT },
                         { role: "user", content: query }
-                    ],
-                    temperature: 0.7,
-                    max_tokens: 2000
+                    ]
                 })
             });
 
@@ -550,22 +548,19 @@
                 .replace(/^# (.*$)/gim, "<h1>$1</h1>")
                 .replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>")
                 .replace(/\*(.*?)\*/g, "<em>$1</em>")
-                .replace(/```(\w+)?
-([\s\S]*?)```/g, "<pre><code>$2</code></pre>")
+                .replace(/```(\w+)?\n([\s\S]*?)```/g, "<pre><code>$2</code></pre>")
                 .replace(/`([^`]+)`/g, "<code>$1</code>")
                 .replace(/^> (.*$)/gim, "<blockquote>$1</blockquote>")
                 .replace(/^\* (.*$)/gim, "<li>$1</li>")
                 .replace(/^\d+\. (.*$)/gim, "<li>$1</li>")
                 .replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" target="_blank" class="text-indigo-400 hover:text-indigo-300">$1</a>')
-                .replace(/
-/g, "<br>");
+                .replace(/\n/g, "<br>");
         }
 
         function escapeHtml(text) {
             const div = document.createElement("div");
             div.textContent = text;
-            return div.innerHTML.replace(/
-/g, "<br>");
+            return div.innerHTML.replace(/\n/g, "<br>");
         }
 
         function copyMessage(id) {
