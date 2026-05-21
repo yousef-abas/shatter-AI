@@ -1,670 +1,495 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <meta name="theme-color" content="#030712">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="description" content="محرك بحث ذكي حقيقي بيجاوب على أي حاجة - Shatter Search">
-    <title>Shatter Search | ذكاء اصطناعي حقيقي</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="theme-color" content="#030712">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<title>Shatter Search | ذكاء اصطناعي حقيقي</title>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<style>
+/* ========= SETUP ========= */
+:root {
+  --p: #6366f1; --pd: #4f46e5; --pl: #818cf8;
+  --bg: #030712; --sf: rgba(15,23,42,0.85);
+  --bd: rgba(255,255,255,0.07); --tx: #f1f5f9; --mu: #64748b;
+}
+*{font-family:'Cairo',sans-serif;box-sizing:border-box;-webkit-tap-highlight-color:transparent;margin:0;padding:0;}
+html,body{height:100%;overflow:hidden;}
+body{background:var(--bg);color:var(--tx);display:flex;flex-direction:column;}
 
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;800;900&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <script src="https://cdn.tailwindcss.com"></script>
+/* ========= BG ========= */
+.bg-grid{position:fixed;inset:0;z-index:0;
+  background-image:linear-gradient(rgba(99,102,241,.04)1px,transparent 1px),linear-gradient(90deg,rgba(99,102,241,.04)1px,transparent 1px);
+  background-size:40px 40px;pointer-events:none;}
+.orb{position:fixed;border-radius:50%;filter:blur(80px);pointer-events:none;z-index:0;animation:orbF 14s ease-in-out infinite;}
+.orb1{width:400px;height:400px;background:rgba(99,102,241,.07);top:-120px;right:-120px;}
+.orb2{width:280px;height:280px;background:rgba(139,92,246,.05);bottom:80px;left:-80px;animation-delay:-7s;}
+@keyframes orbF{0%,100%{transform:translateY(0) scale(1);}50%{transform:translateY(-28px) scale(1.04);}}
 
-    <style>
-        :root { --primary: #6366f1; --primary-light: #818cf8; }
-        * { font-family: 'Cairo', sans-serif; -webkit-tap-highlight-color: transparent; }
-        body { 
-            background: linear-gradient(135deg, #030712 0%, #0f172a 50%, #1e1b4b 100%);
-            color: #f3f4f6; min-height: 100vh; overflow-x: hidden;
-        }
-        .glass { 
-            background: rgba(15, 23, 42, 0.7); 
-            backdrop-filter: blur(20px); 
-            border: 1px solid rgba(255, 255, 255, 0.08);
-        }
-        .particles {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            pointer-events: none; z-index: 0; overflow: hidden;
-        }
-        .particle {
-            position: absolute; width: 3px; height: 3px;
-            background: rgba(99, 102, 241, 0.25); border-radius: 50%;
-            animation: float 20s infinite linear;
-        }
-        @keyframes float {
-            0% { transform: translateY(100vh) rotate(0deg); opacity: 0; }
-            10% { opacity: 1; }
-            90% { opacity: 1; }
-            100% { transform: translateY(-100vh) rotate(720deg); opacity: 0; }
-        }
-        .btn-primary {
-            background: linear-gradient(135deg, #6366f1, #4f46e5);
-            transition: all 0.3s ease;
-        }
-        .btn-primary:active { transform: scale(0.95); }
-        .btn-primary.loading { opacity: 0.7; pointer-events: none; }
-        .typing-dot {
-            display: inline-block; width: 6px; height: 6px;
-            background: #818cf8; border-radius: 50%;
-            animation: typingBounce 1.4s infinite ease-in-out both;
-            margin: 0 1px;
-        }
-        .typing-dot:nth-child(1) { animation-delay: -0.32s; }
-        .typing-dot:nth-child(2) { animation-delay: -0.16s; }
-        @keyframes typingBounce {
-            0%, 80%, 100% { transform: scale(0); }
-            40% { transform: scale(1); }
-        }
-        .message-bubble {
-            max-width: 90%; padding: 12px 16px;
-            border-radius: 18px; margin: 8px 0;
-            word-wrap: break-word; animation: slideUp 0.4s ease;
-        }
-        .message-user {
-            background: linear-gradient(135deg, #6366f1, #4f46e5);
-            margin-left: auto; border-bottom-right-radius: 4px;
-        }
-        .message-ai {
-            background: rgba(30, 41, 59, 0.9);
-            margin-right: auto; border-bottom-left-radius: 4px;
-            border: 1px solid rgba(255,255,255,0.08);
-        }
-        @keyframes slideUp {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        .markdown-content h1, .markdown-content h2, .markdown-content h3 {
-            color: #818cf8; font-weight: 800; margin: 12px 0 6px; font-size: 1rem;
-        }
-        .markdown-content p { margin: 6px 0; line-height: 1.7; }
-        .markdown-content ul, .markdown-content ol { margin: 6px 0; padding-right: 16px; }
-        .markdown-content li { margin: 3px 0; }
-        .markdown-content strong { color: #a5b4fc; }
-        .markdown-content code {
-            background: rgba(99, 102, 241, 0.15); color: #c7d2fe;
-            padding: 2px 6px; border-radius: 4px; font-family: monospace; font-size: 0.85em;
-        }
-        .markdown-content pre {
-            background: #0f172a; border: 1px solid rgba(99, 102, 241, 0.2);
-            border-radius: 10px; padding: 12px; overflow-x: auto;
-            margin: 10px 0; direction: ltr; text-align: left; font-size: 0.8rem;
-        }
-        .markdown-content pre code { background: transparent; padding: 0; }
-        .markdown-content blockquote {
-            border-right: 3px solid #6366f1; padding-right: 12px;
-            margin: 10px 0; color: #94a3b8; font-style: italic;
-        }
-        .toast {
-            position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%) translateY(100px);
-            background: rgba(15, 23, 42, 0.95); backdrop-filter: blur(20px);
-            border: 1px solid rgba(255,255,255,0.1); border-radius: 16px;
-            padding: 14px 24px; color: white; font-weight: 600; font-size: 13px;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.4);
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            z-index: 1000; display: flex; align-items: center; gap: 10px;
-            max-width: 90vw;
-        }
-        .toast.show { transform: translateX(-50%) translateY(0); }
-        .sidebar {
-            position: fixed; top: 0; right: -100%; width: 85%; max-width: 320px; height: 100vh;
-            background: rgba(15, 23, 42, 0.98); backdrop-filter: blur(30px);
-            border-left: 1px solid rgba(255,255,255,0.08); z-index: 500;
-            transition: right 0.4s cubic-bezier(0.23, 1, 0.32, 1);
-            padding: 20px; overflow-y: auto;
-        }
-        .sidebar.open { right: 0; }
-        .sidebar-overlay {
-            position: fixed; inset: 0; background: rgba(0,0,0,0.5);
-            z-index: 400; opacity: 0; visibility: hidden; transition: all 0.3s;
-        }
-        .sidebar-overlay.open { opacity: 1; visibility: visible; }
-        .chat-item {
-            padding: 10px 12px; border-radius: 12px; margin-bottom: 6px;
-            background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.05);
-            cursor: pointer; transition: all 0.3s;
-        }
-        .chat-item:hover { background: rgba(99, 102, 241, 0.1); border-color: rgba(99, 102, 241, 0.3); }
-        .chat-item.active { background: rgba(99, 102, 241, 0.15); border-color: rgba(99, 102, 241, 0.4); }
-        .new-chat-btn {
-            width: 100%; padding: 12px; border-radius: 12px;
-            background: linear-gradient(135deg, #6366f1, #4f46e5);
-            color: white; font-weight: 700; font-size: 13px; border: none;
-            cursor: pointer; transition: all 0.3s;
-            display: flex; align-items: center; justify-content: center; gap: 8px;
-        }
-        .new-chat-btn:active { transform: scale(0.98); }
-        .input-area {
-            position: fixed; bottom: 0; left: 0; right: 0;
-            background: rgba(15, 23, 42, 0.95); backdrop-filter: blur(20px);
-            border-top: 1px solid rgba(255,255,255,0.08); padding: 12px 16px; z-index: 100;
-        }
-        .model-badge {
-            display: inline-flex; align-items: center; gap: 6px;
-            padding: 6px 12px; border-radius: 20px;
-            background: rgba(99, 102, 241, 0.1); border: 1px solid rgba(99, 102, 241, 0.2);
-            font-size: 11px; color: #818cf8; font-weight: 600;
-        }
-        .status-dot {
-            width: 8px; height: 8px; border-radius: 50%;
-            background: #10b981; box-shadow: 0 0 8px #10b981;
-            animation: pulse 2s infinite;
-        }
-        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
-        .suggestion-chip {
-            display: inline-flex; align-items: center; gap: 6px;
-            padding: 10px 16px; border-radius: 20px;
-            background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.08);
-            color: #94a3b8; font-size: 12px; cursor: pointer;
-            transition: all 0.3s; margin: 4px;
-        }
-        .suggestion-chip:hover, .suggestion-chip:active {
-            background: rgba(99, 102, 241, 0.15); border-color: rgba(99, 102, 241, 0.3);
-            color: #c7d2fe; transform: translateY(-2px);
-        }
-        .welcome-screen {
-            display: flex; flex-direction: column; align-items: center;
-            justify-content: center; min-height: 60vh; text-align: center; padding: 20px;
-        }
-        ::-webkit-scrollbar { width: 4px; }
-        ::-webkit-scrollbar-thumb { background: rgba(99, 102, 241, 0.3); border-radius: 10px; }
-        @media (max-width: 640px) {
-            .message-bubble { max-width: 95%; padding: 10px 12px; }
-            .welcome-screen h1 { font-size: 2rem !important; }
-        }
-    </style>
-<base target="_blank">
+/* ========= HEADER ========= */
+header{position:relative;z-index:50;background:rgba(3,7,18,.92);backdrop-filter:blur(20px);
+  border-bottom:1px solid var(--bd);padding:0 16px;height:56px;flex-shrink:0;
+  display:flex;align-items:center;justify-content:space-between;}
+.logo{display:flex;align-items:center;gap:10px;}
+.logo-ic{width:32px;height:32px;border-radius:10px;background:linear-gradient(135deg,#6366f1,#8b5cf6);
+  display:flex;align-items:center;justify-content:center;font-size:14px;}
+.logo-tx{font-weight:900;font-size:15px;letter-spacing:-.5px;}
+.logo-tx span{color:var(--pl);}
+.model-pill{display:flex;align-items:center;gap:6px;padding:5px 12px;border-radius:20px;
+  background:rgba(99,102,241,.1);border:1px solid rgba(99,102,241,.2);font-size:11px;font-weight:700;color:var(--pl);}
+.live-dot{width:7px;height:7px;border-radius:50%;background:#10b981;box-shadow:0 0 6px #10b981;animation:lp 2s infinite;}
+@keyframes lp{0%,100%{opacity:1;}50%{opacity:.4;}}
+.icon-btn{width:36px;height:36px;border-radius:10px;background:transparent;border:1px solid var(--bd);
+  color:var(--mu);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s;font-size:14px;}
+.icon-btn:hover{background:rgba(255,255,255,.06);color:var(--tx);}
+
+/* ========= LAYOUT ========= */
+.app-body{flex:1;display:flex;overflow:hidden;position:relative;z-index:1;}
+
+/* ========= SIDEBAR ========= */
+.sidebar{width:260px;flex-shrink:0;background:rgba(8,12,28,.97);border-left:1px solid var(--bd);
+  display:flex;flex-direction:column;overflow:hidden;
+  transition:transform .3s cubic-bezier(.23,1,.32,1);}
+.sb-head{padding:16px;border-bottom:1px solid var(--bd);}
+.new-btn{width:100%;padding:10px 14px;background:linear-gradient(135deg,#6366f1,#4f46e5);
+  border:none;border-radius:12px;color:white;font-family:'Cairo',sans-serif;font-weight:700;font-size:13px;
+  cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;transition:all .2s;}
+.new-btn:hover{opacity:.9;transform:translateY(-1px);}
+.new-btn:active{transform:scale(.98);}
+.sec-lbl{padding:12px 16px 6px;font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:1px;color:var(--mu);}
+.chat-list{flex:1;overflow-y:auto;padding:4px 8px;}
+.chat-list::-webkit-scrollbar{width:3px;}
+.chat-list::-webkit-scrollbar-thumb{background:rgba(99,102,241,.2);border-radius:4px;}
+.ci{padding:10px;border-radius:10px;margin-bottom:3px;cursor:pointer;transition:all .2s;
+  border:1px solid transparent;display:flex;align-items:flex-start;gap:8px;}
+.ci:hover{background:rgba(255,255,255,.04);border-color:var(--bd);}
+.ci.active{background:rgba(99,102,241,.1);border-color:rgba(99,102,241,.25);}
+.ci-ic{color:var(--pl);font-size:11px;margin-top:2px;flex-shrink:0;}
+.ci-title{font-size:12px;font-weight:600;color:var(--tx);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.ci-meta{font-size:10px;color:var(--mu);margin-top:2px;}
+.sb-foot{padding:12px 16px;border-top:1px solid var(--bd);}
+.model-sel{width:100%;background:rgba(255,255,255,.04);border:1px solid var(--bd);border-radius:10px;
+  padding:8px 10px;color:var(--tx);font-family:'Cairo',sans-serif;font-size:12px;outline:none;cursor:pointer;margin-top:6px;}
+.model-sel:focus{border-color:rgba(99,102,241,.4);}
+
+/* ========= CHAT ========= */
+.chat-area{flex:1;display:flex;flex-direction:column;overflow:hidden;}
+.messages{flex:1;overflow-y:auto;padding:24px 16px 16px;}
+.messages::-webkit-scrollbar{width:4px;}
+.messages::-webkit-scrollbar-thumb{background:rgba(99,102,241,.2);border-radius:4px;}
+
+/* ========= WELCOME ========= */
+.welcome{display:flex;flex-direction:column;align-items:center;justify-content:center;
+  min-height:100%;padding:20px;text-align:center;}
+.w-orb{width:72px;height:72px;border-radius:24px;background:linear-gradient(135deg,#6366f1,#8b5cf6);
+  display:flex;align-items:center;justify-content:center;font-size:28px;margin-bottom:20px;
+  box-shadow:0 0 40px rgba(99,102,241,.3);}
+.welcome h1{font-size:2.2rem;font-weight:900;letter-spacing:-1px;
+  background:linear-gradient(135deg,#fff,#c7d2fe);-webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;background-clip:text;margin-bottom:8px;}
+.welcome p{font-size:13px;color:var(--pl);font-weight:600;margin-bottom:28px;}
+.chips{display:flex;flex-wrap:wrap;justify-content:center;gap:8px;max-width:520px;}
+.chip{display:inline-flex;align-items:center;gap:6px;padding:9px 16px;border-radius:20px;
+  background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);
+  color:#94a3b8;font-size:12px;font-weight:600;cursor:pointer;transition:all .25s;}
+.chip:hover{background:rgba(99,102,241,.12);border-color:rgba(99,102,241,.35);color:#c7d2fe;transform:translateY(-2px);}
+.chip i{color:var(--pl);font-size:11px;}
+
+/* ========= MESSAGES ========= */
+.msg-row{display:flex;margin-bottom:16px;animation:mIn .35s cubic-bezier(.23,1,.32,1) both;}
+@keyframes mIn{from{opacity:0;transform:translateY(16px);}to{opacity:1;transform:translateY(0);}}
+.msg-row.user{justify-content:flex-start;}
+.msg-row.ai{justify-content:flex-end;}
+.bubble{max-width:82%;padding:12px 16px;border-radius:18px;font-size:13.5px;line-height:1.75;word-wrap:break-word;}
+.bubble.user{background:linear-gradient(135deg,#6366f1,#4f46e5);color:white;border-bottom-right-radius:4px;}
+.bubble.ai{background:rgba(20,30,60,.9);border:1px solid rgba(255,255,255,.07);color:#e2e8f0;border-bottom-left-radius:4px;}
+.bubble.err{background:rgba(220,38,38,.1);border:1px solid rgba(220,38,38,.2);color:#fca5a5;}
+
+/* ========= MARKDOWN ========= */
+.md h1,.md h2,.md h3{color:#a5b4fc;font-weight:800;margin:12px 0 6px;}
+.md h1{font-size:1rem;}.md h2,.md h3{font-size:.95rem;}
+.md p{margin:6px 0;}.md ul,.md ol{padding-right:18px;margin:6px 0;}.md li{margin:4px 0;}
+.md strong{color:#c7d2fe;}.md em{color:#a5b4fc;}
+.md code{background:rgba(99,102,241,.15);color:#c7d2fe;padding:2px 6px;border-radius:5px;font-size:12px;font-family:monospace;}
+.md pre{background:#0a0f1e;border:1px solid rgba(99,102,241,.2);border-radius:12px;padding:14px 16px;
+  overflow-x:auto;margin:10px 0;direction:ltr;text-align:left;}
+.md pre code{background:none;padding:0;font-size:12px;}
+.md blockquote{border-right:3px solid #6366f1;padding-right:12px;margin:8px 0;color:#94a3b8;font-style:italic;}
+.md a{color:#818cf8;}.md a:hover{text-decoration:underline;}.md hr{border:none;border-top:1px solid rgba(255,255,255,.08);margin:12px 0;}
+.b-actions{display:flex;gap:12px;margin-top:10px;padding-top:8px;border-top:1px solid rgba(255,255,255,.06);}
+.b-act{background:none;border:none;cursor:pointer;color:var(--mu);font-size:11px;font-family:'Cairo',sans-serif;
+  display:flex;align-items:center;gap:5px;padding:0;transition:color .2s;}
+.b-act:hover{color:var(--pl);}
+
+/* ========= TYPING ========= */
+.typing{display:flex;align-items:center;gap:4px;padding:14px 18px;}
+.td{width:7px;height:7px;border-radius:50%;background:var(--pl);animation:tb 1.3s infinite ease-in-out both;}
+.td:nth-child(1){animation-delay:-.32s;}.td:nth-child(2){animation-delay:-.16s;}
+@keyframes tb{0%,80%,100%{transform:scale(.4);opacity:.4;}40%{transform:scale(1);opacity:1;}}
+
+/* ========= INPUT ========= */
+.input-area{padding:12px 16px 16px;background:rgba(3,7,18,.95);backdrop-filter:blur(20px);
+  border-top:1px solid var(--bd);flex-shrink:0;}
+.input-box{display:flex;align-items:flex-end;gap:10px;background:rgba(15,23,42,.9);
+  border:1px solid rgba(255,255,255,.09);border-radius:18px;padding:8px 8px 8px 14px;transition:border-color .2s;}
+.input-box:focus-within{border-color:rgba(99,102,241,.4);}
+.msg-in{flex:1;background:none;border:none;outline:none;color:var(--tx);font-family:'Cairo',sans-serif;
+  font-size:13.5px;line-height:1.6;resize:none;min-height:24px;max-height:120px;padding:6px 0;text-align:right;}
+.msg-in::placeholder{color:var(--mu);}
+.send-btn{width:42px;height:42px;flex-shrink:0;background:linear-gradient(135deg,#6366f1,#4f46e5);
+  border:none;border-radius:13px;color:white;font-size:15px;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;transition:all .2s;}
+.send-btn:hover{opacity:.9;transform:scale(1.05);}
+.send-btn:active{transform:scale(.95);}
+.send-btn:disabled{opacity:.4;pointer-events:none;}
+.hint{text-align:center;font-size:10px;color:rgba(100,116,139,.5);margin-top:8px;}
+
+/* ========= TOAST ========= */
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(80px);
+  background:rgba(13,21,38,.97);border:1px solid rgba(255,255,255,.1);border-radius:14px;
+  padding:12px 20px;color:white;font-size:13px;font-weight:600;
+  display:flex;align-items:center;gap:10px;
+  box-shadow:0 16px 32px rgba(0,0,0,.4);transition:transform .4s cubic-bezier(.175,.885,.32,1.275);
+  z-index:999;max-width:90vw;}
+.toast.show{transform:translateX(-50%) translateY(0);}
+
+/* ========= CONFIG NOTICE ========= */
+.config-banner{
+  background:rgba(234,179,8,.08);border:1px solid rgba(234,179,8,.2);
+  border-radius:12px;padding:12px 16px;margin:12px;font-size:12px;color:#fde68a;
+  display:flex;align-items:flex-start;gap:10px;line-height:1.6;
+}
+.config-banner i{font-size:14px;margin-top:2px;flex-shrink:0;color:#fbbf24;}
+.config-banner code{background:rgba(234,179,8,.15);padding:1px 6px;border-radius:4px;font-size:11px;direction:ltr;display:inline-block;}
+
+/* ========= MOBILE ========= */
+.mob-toggle{display:none;}
+@media(max-width:768px){
+  .sidebar{position:fixed;right:-280px;top:56px;bottom:0;z-index:100;border-right:1px solid var(--bd);}
+  .sidebar.open{right:0;box-shadow:-20px 0 40px rgba(0,0,0,.5);}
+  .sb-overlay{position:fixed;inset:0;top:56px;z-index:90;background:rgba(0,0,0,.5);display:none;}
+  .sb-overlay.open{display:block;}
+  .mob-toggle{display:flex;}
+  .welcome h1{font-size:1.7rem;}
+}
+</style>
 </head>
 <body>
-    <div class="particles" id="particles"></div>
 
-    <div id="toast" class="toast">
-        <i id="toastIcon" class="fas fa-check-circle text-emerald-400"></i>
-        <span id="toastMessage">تم بنجاح</span>
+<div class="bg-grid"></div>
+<div class="orb orb1"></div>
+<div class="orb orb2"></div>
+
+<div class="toast" id="toast">
+  <i id="t-icon" class="fas fa-check-circle" style="color:#10b981"></i>
+  <span id="t-msg">تم!</span>
+</div>
+
+<div class="sb-overlay" id="sbOverlay" onclick="closeSb()"></div>
+
+<!-- HEADER -->
+<header>
+  <div class="logo">
+    <button class="icon-btn mob-toggle" onclick="toggleSb()"><i class="fas fa-bars"></i></button>
+    <div class="logo-ic"><i class="fas fa-bolt" style="color:white"></i></div>
+    <span class="logo-tx">SHATTER <span>SEARCH</span></span>
+  </div>
+  <div class="model-pill">
+    <div class="live-dot"></div>
+    <span id="modelLabel">Claude Sonnet 4</span>
+  </div>
+  <div style="width:36px"></div>
+</header>
+
+<!-- BODY -->
+<div class="app-body">
+
+  <!-- SIDEBAR -->
+  <div class="sidebar" id="sidebar">
+    <div class="sb-head">
+      <button class="new-btn" onclick="newChat()"><i class="fas fa-plus"></i> محادثة جديدة</button>
+    </div>
+    <div class="sec-lbl">المحادثات</div>
+    <div class="chat-list" id="chatList"></div>
+    <div class="sb-foot">
+      <div style="font-size:10px;color:var(--mu);font-weight:700;text-transform:uppercase;letter-spacing:1px;margin-bottom:6px">الموديل</div>
+      <select class="model-sel" id="modelSel" onchange="onModelChange()">
+        <option value="claude-sonnet-4-20250514">Claude Sonnet 4 (الأقوى)</option>
+        <option value="claude-haiku-4-5">Claude Haiku 4.5 (الأسرع)</option>
+      </select>
+      <div style="display:flex;align-items:center;gap:6px;margin-top:10px;">
+        <div class="live-dot"></div>
+        <span style="font-size:11px;color:var(--mu)">Cloudflare Worker Proxy</span>
+      </div>
+      <button onclick="clearAll()" style="background:none;border:none;color:#ef4444;font-size:11px;font-family:'Cairo',sans-serif;cursor:pointer;margin-top:8px;padding:0;">
+        <i class="fas fa-trash" style="margin-left:5px"></i> مسح كل المحادثات
+      </button>
+    </div>
+  </div>
+
+  <!-- CHAT -->
+  <div class="chat-area">
+
+    <!-- Config banner - shown only if PROXY_URL not set -->
+    <div class="config-banner" id="configBanner" style="display:none">
+      <i class="fas fa-exclamation-triangle"></i>
+      <div>
+        <strong>محتاج تضبط الـ Proxy URL</strong><br>
+        افتح الملف ده وغيّر متغير <code>PROXY_URL</code> برابط الـ Cloudflare Worker بتاعك.
+        اتبع الخطوات في ملف <code>worker.js</code>.
+      </div>
     </div>
 
-    <div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleSidebar()"></div>
-
-    <div class="sidebar" id="sidebar">
-        <div class="flex justify-between items-center mb-6">
-            <div class="flex items-center gap-3">
-                <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center">
-                    <i class="fas fa-brain text-white text-sm"></i>
-                </div>
-                <div>
-                    <h3 class="font-bold text-sm text-white">Shatter Search</h3>
-                    <p class="text-[10px] text-slate-400">v3.2 Groq</p>
-                </div>
-            </div>
-            <button onclick="toggleSidebar()" class="text-slate-400 hover:text-white w-8 h-8 flex items-center justify-center rounded-lg hover:bg-white/10 transition-all">
-                <i class="fas fa-times"></i>
-            </button>
+    <div class="messages" id="messages">
+      <div class="welcome" id="welcome">
+        <div class="w-orb"><i class="fas fa-brain"></i></div>
+        <h1>SHATTER SEARCH</h1>
+        <p>Claude حقيقي — بيشتغل من غير ما تحتاج تدخل أي مفتاح</p>
+        <div class="chips">
+          <button class="chip" onclick="ask('اكتبلي كود Python يحسب الأعداد الأولية من 1 لـ 100')"><i class="fab fa-python"></i> كود Python</button>
+          <button class="chip" onclick="ask('اشرحلي النسبية العامة بمثال بسيط')"><i class="fas fa-atom"></i> فيزياء</button>
+          <button class="chip" onclick="ask('اكتبلي وصفة كشري مصري أصلي')"><i class="fas fa-utensils"></i> طبخ</button>
+          <button class="chip" onclick="ask('اكتبلي إيميل رسمي للمدير عن طلب إجازة')"><i class="fas fa-envelope"></i> إيميل رسمي</button>
+          <button class="chip" onclick="ask('اشرحلي الفرق بين React و Vue و Angular')"><i class="fab fa-react"></i> مقارنة Frameworks</button>
+          <button class="chip" onclick="ask('اكتبلي قصة قصيرة مضحكة بالعربي')"><i class="fas fa-book"></i> قصة</button>
         </div>
+      </div>
+    </div>
 
-        <button onclick="newChat()" class="new-chat-btn mb-4">
-            <i class="fas fa-plus"></i> محادثة جديدة
+    <div class="input-area">
+      <div class="input-box">
+        <textarea id="msgIn" class="msg-in" placeholder="اسأل عن أي حاجة..." rows="1"
+          onkeydown="onKey(event)" oninput="resize(this)"></textarea>
+        <button class="send-btn" id="sendBtn" onclick="send()">
+          <i class="fas fa-paper-plane" id="sendIc"></i>
         </button>
-
-        <div class="flex items-center justify-between mb-3">
-            <p class="text-[10px] text-slate-500 font-bold uppercase tracking-wider">المحادثات</p>
-            <button onclick="clearAllChats()" class="text-[10px] text-rose-400 hover:text-rose-300 transition-colors">مسح الكل</button>
-        </div>
-
-        <div id="chatList"></div>
-
-        <div class="mt-6 pt-4 border-t border-white/5">
-            <p class="text-[10px] text-slate-500 font-bold uppercase tracking-wider mb-3">الموديل</p>
-            <select id="modelSelect" onchange="saveModel()" class="w-full bg-white/5 border border-white/10 rounded-xl px-3 py-2 text-xs text-slate-300 outline-none">
-                <option value="llama-3.1-8b-instant">🦙 Llama 3.1 8B (سريع)</option>
-                <option value="llama-3.3-70b-versatile">🦙 Llama 3.3 70B (قوي)</option>
-                <option value="meta-llama/llama-4-scout-17b-16e-instruct">🚀 Llama 4 Scout</option>
-                <option value="qwen/qwen3-32b">🔥 Qwen 3 32B</option>
-                <option value="openai/gpt-oss-20b">🧠 GPT-OSS 20B</option>
-            </select>
-        </div>
-
-        <div class="mt-4 pt-4 border-t border-white/5">
-            <div class="flex items-center gap-2 text-[10px] text-slate-500">
-                <span class="status-dot"></span>
-                <span>المحرك متصل بالـ Worker</span>
-            </div>
-            <p class="text-[10px] text-slate-600 mt-2">Secured via Cloudflare Workers</p>
-        </div>
+      </div>
+      <div class="hint">Shatter Search — مدعوم بـ Claude من Anthropic</div>
     </div>
+  </div>
+</div>
 
-    <div class="min-h-screen flex flex-col">
-        <header class="sticky top-0 z-50 glass border-b border-white/5">
-            <div class="max-w-3xl mx-auto px-4 py-3 flex justify-between items-center">
-                <button onclick="toggleSidebar()" class="text-slate-400 hover:text-white w-10 h-10 flex items-center justify-center rounded-xl hover:bg-white/10 transition-all">
-                    <i class="fas fa-bars text-lg"></i>
-                </button>
-                <div class="flex items-center gap-2">
-                    <span class="model-badge">
-                        <i class="fas fa-microchip text-[10px]"></i>
-                        <span id="currentModel">Llama 3.1</span>
-                    </span>
-                </div>
-                <button onclick="shareApp()" class="text-slate-400 hover:text-white w-10 h-10 flex items-center justify-center rounded-xl hover:bg-white/10 transition-all">
-                    <i class="fas fa-share-alt"></i>
-                </button>
-            </div>
-        </header>
+<script>
+// ============================================================
+//  ⚠️  غيّر الرابط ده برابط الـ Cloudflare Worker بتاعك
+//  بعد ما تعمل worker وتنشره، هتاخد رابط زي:
+//  https://shatter-proxy.YOUR-NAME.workers.dev
+// ============================================================
+const PROXY_URL = "https://my-first-api.jsmith1233446.workers.dev/";
+// ============================================================
 
-        <main id="chatArea" class="flex-1 overflow-y-auto pb-32 pt-4 px-4">
-            <div id="welcomeScreen" class="welcome-screen">
-                <div class="w-20 h-20 rounded-3xl bg-gradient-to-br from-indigo-500 to-purple-600 mb-6 shadow-2xl shadow-indigo-500/30 flex items-center justify-center">
-                    <i class="fas fa-brain text-3xl text-white"></i>
-                </div>
-                <h1 class="text-3xl md:text-5xl font-black text-transparent bg-clip-text bg-gradient-to-r from-white via-indigo-200 to-slate-400 mb-3">
-                    SHATTER SEARCH
-                </h1>
-                <p class="text-sm text-indigo-400 font-bold mb-8">محرك بحث ذكي حقيقي بيجاوب على أي حاجة</p>
+const MODEL_NAMES = {
+  "claude-sonnet-4-20250514": "Claude Sonnet 4",
+  "claude-haiku-4-5": "Claude Haiku 4.5"
+};
 
-                <div class="flex flex-wrap justify-center gap-2 max-w-lg">
-                    <button onclick="quickAsk('اكتبلي كود Python يحسب الفيبوناتشي')" class="suggestion-chip">
-                        <i class="fab fa-python text-indigo-400"></i> كود Python
-                    </button>
-                    <button onclick="quickAsk('اشرحلي النسبية العامة ببساطة')" class="suggestion-chip">
-                        <i class="fas fa-atom text-indigo-400"></i> فيزياء
-                    </button>
-                    <button onclick="quickAsk('اكتبلي وصفة كشري مصري')" class="suggestion-chip">
-                        <i class="fas fa-utensils text-indigo-400"></i> طبخ
-                    </button>
-                    <button onclick="quickAsk('فكرني بأهم أحداث 2025')" class="suggestion-chip">
-                        <i class="fas fa-globe text-indigo-400"></i> تاريخ
-                    </button>
-                    <button onclick="quickAsk('اكتبلي إيميل رسمي للمدير')" class="suggestion-chip">
-                        <i class="fas fa-envelope text-indigo-400"></i> إيميل رسمي
-                    </button>
-                    <button onclick="quickAsk('اشرحلي الـ React Hooks')" class="suggestion-chip">
-                        <i class="fab fa-react text-indigo-400"></i> React
-                    </button>
-                </div>
-            </div>
+const SYSTEM = "أنت مساعد ذكي اسمه Shatter Search. بتتكلم بالعربي العامي المصري. بتجاوب بشكل مفيد ومنظم. لو السؤال عن كود، اكتبه بشكل صح. لو سؤال عام، جاوب باختصار وتنظيم.";
 
-            <div id="messagesContainer" class="max-w-3xl mx-auto space-y-4 hidden"></div>
-        </main>
+let chats = JSON.parse(localStorage.getItem("ss_chats") || "[]");
+let curId = null;
+let loading = false;
+let history = [];
 
-        <div class="input-area">
-            <div class="max-w-3xl mx-auto">
-                <div class="glass rounded-2xl p-2 flex items-center gap-2">
-                    <input type="text" id="messageInput" 
-                        placeholder="اسأل عن أي حاجة..." 
-                        class="flex-1 bg-transparent py-3 px-3 outline-none text-sm text-white placeholder-slate-500 font-medium text-right"
-                        autocomplete="off" enterkeyhint="send">
-                    <button id="sendBtn" onclick="sendMessage()" class="btn-primary text-white w-12 h-12 rounded-xl flex items-center justify-center text-lg shrink-0">
-                        <i class="fas fa-paper-plane" id="sendIcon"></i>
-                    </button>
-                </div>
-                <p class="text-[10px] text-slate-600 text-center mt-2">Powered by Groq API - Ultra Fast via Workers</p>
-            </div>
-        </div>
-    </div>
+// ============================================================
+function init() {
+  if (PROXY_URL === "https://my-first-api.jsmith1233446.workers.dev/") {
+    document.getElementById("configBanner").style.display = "flex";
+  }
+  const saved = localStorage.getItem("ss_model");
+  if (saved) document.getElementById("modelSel").value = saved;
+  updateLabel();
+  if (!chats.length) createChat();
+  else loadChat(chats[0].id);
+  renderList();
+}
 
-    <script>
-        // ==================== WORKER CONFIG ====================
-        // هنا حطينا رابط الـ Cloudflare Worker بتاعك اللي بيمرر لـ Groq بأمان وبدون مشاكل CORS
-        const GROQ_URL = "https://my-first-api.jsmith1233446.workers.dev/";
+// ============================================================
+function createChat() {
+  const c = { id: Date.now().toString(), title: "محادثة جديدة", messages: [], createdAt: new Date().toISOString() };
+  chats.unshift(c); save(); loadChat(c.id); renderList(); return c;
+}
+function newChat() { createChat(); closeSb(); toast("محادثة جديدة ✨"); }
 
-        const SYSTEM_PROMPT = "You must ALWAYS reply in friendly, street-smart Egyptian slang (العامية المصرية). Keep answers helpful, clear, and professional, but tone it like a clever Egyptian developer talking to his close friend. Use structured lists, bold text, and phrases like 'يا حبيب أخوك', 'بص بقا', 'يا صاحبي', 'ركز معايا'. Always format code blocks properly with language tags.";
+function loadChat(id) {
+  curId = id;
+  const c = chats.find(x => x.id === id);
+  if (!c) return;
+  history = c.messages.map(m => ({ role: m.role, content: m.content }));
+  const box = document.getElementById("messages");
+  const wel = document.getElementById("welcome");
+  box.innerHTML = ""; box.appendChild(wel);
+  wel.style.display = c.messages.length ? "none" : "flex";
+  c.messages.forEach(m => render(m.role, m.content, m.id, false));
+  renderList(); scrollD();
+}
 
-        let chats = JSON.parse(localStorage.getItem("shatter_chats") || "[]");
-        let currentChatId = null;
-        let isLoading = false;
+function renderList() {
+  const el = document.getElementById("chatList");
+  if (!chats.length) { el.innerHTML = '<p style="font-size:12px;color:var(--mu);text-align:center;padding:20px 0">مفيش محادثات</p>'; return; }
+  el.innerHTML = chats.slice(0, 40).map(c => {
+    const a = c.id === curId;
+    const t = (c.messages[0]?.content || c.title).slice(0, 35);
+    const d = new Date(c.createdAt).toLocaleDateString("ar-EG", { month: "short", day: "numeric" });
+    return `<div class="ci ${a?"active":""}" onclick="loadChat('${c.id}')">
+      <i class="fas fa-comment-alt ci-ic"></i>
+      <div style="overflow:hidden;flex:1">
+        <div class="ci-title">${esc(t)}</div>
+        <div class="ci-meta">${d} · ${c.messages.length} رسالة</div>
+      </div></div>`;
+  }).join("");
+}
 
-        function init() {
-            const container = document.getElementById("particles");
-            for (let i = 0; i < 25; i++) {
-                const p = document.createElement("div");
-                p.className = "particle";
-                p.style.left = Math.random() * 100 + "%";
-                p.style.animationDelay = Math.random() * 20 + "s";
-                p.style.animationDuration = (15 + Math.random() * 10) + "s";
-                container.appendChild(p);
-            }
+function save() { localStorage.setItem("ss_chats", JSON.stringify(chats.slice(0, 50))); }
+function clearAll() {
+  if (!confirm("متأكد؟")) return;
+  chats = []; save(); createChat(); toast("تم المسح 🗑️");
+}
 
-            const savedModel = localStorage.getItem("shatter_model") || "llama-3.1-8b-instant";
-            document.getElementById("modelSelect").value = savedModel;
-            updateModelBadge(savedModel);
+// ============================================================
+function ask(t) { document.getElementById("msgIn").value = t; send(); }
 
-            if (chats.length === 0) {
-                createNewChat();
-            } else {
-                loadChat(chats[0].id);
-            }
+async function send() {
+  const inp = document.getElementById("msgIn");
+  const txt = inp.value.trim();
+  if (!txt || loading) return;
 
-            renderChatList();
-            document.getElementById("messageInput").focus();
-        }
+  const c = chats.find(x => x.id === curId);
+  if (!c) return;
 
-        function createNewChat() {
-            const chat = {
-                id: Date.now().toString(),
-                title: "محادثة جديدة",
-                messages: [],
-                model: document.getElementById("modelSelect").value,
-                createdAt: new Date().toISOString()
-            };
-            chats.unshift(chat);
-            saveChats();
-            loadChat(chat.id);
-            renderChatList();
-            return chat.id;
-        }
+  document.getElementById("welcome").style.display = "none";
+  inp.value = ""; resize(inp);
 
-        function newChat() {
-            createNewChat();
-            toggleSidebar();
-            showToast("محادثة جديدة! 🎉");
-        }
+  const uid = "u" + Date.now(), aid = "a" + Date.now();
+  c.messages.push({ role: "user", content: txt, id: uid });
+  if (c.messages.filter(m => m.role === "user").length === 1) c.title = txt.slice(0, 40);
+  history.push({ role: "user", content: txt });
+  save(); render("user", txt, uid); renderList();
 
-        function loadChat(chatId) {
-            currentChatId = chatId;
-            const chat = chats.find(c => c.id === chatId);
-            if (!chat) return;
+  // typing indicator
+  const typ = document.createElement("div");
+  typ.className = "msg-row ai"; typ.id = "typing";
+  typ.innerHTML = `<div class="bubble ai"><div class="typing"><div class="td"></div><div class="td"></div><div class="td"></div></div></div>`;
+  document.getElementById("messages").appendChild(typ); scrollD();
 
-            document.getElementById("welcomeScreen").classList.add("hidden");
-            const container = document.getElementById("messagesContainer");
-            container.classList.remove("hidden");
-            container.innerHTML = "";
+  loading = true;
+  document.getElementById("sendBtn").disabled = true;
+  document.getElementById("sendIc").className = "fas fa-spinner fa-spin";
 
-            chat.messages.forEach(msg => renderMessage(msg.role, msg.content));
+  try {
+    const reply = await callProxy(history);
+    typ.remove();
+    c.messages.push({ role: "assistant", content: reply, id: aid });
+    history.push({ role: "assistant", content: reply });
+    save(); render("assistant", reply, aid);
+    toast("الرد جاهز ✨");
+  } catch (e) {
+    typ.remove();
+    render("err", getErrMsg(e), "err" + Date.now());
+    toast("حصل خطأ 😅", "error");
+  } finally {
+    loading = false;
+    document.getElementById("sendBtn").disabled = false;
+    document.getElementById("sendIc").className = "fas fa-paper-plane";
+    scrollD();
+  }
+}
 
-            document.getElementById("modelSelect").value = chat.model;
-            updateModelBadge(chat.model);
+async function callProxy(msgs) {
+  if (PROXY_URL === "https://my-first-api.jsmith1233446.workers.dev/") {
+    throw new Error("لسه محتاج تضبط PROXY_URL في الكود — اتبع خطوات ملف worker.js");
+  }
+  const model = document.getElementById("modelSel").value;
+  const res = await fetch(PROXY_URL, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ model, max_tokens: 2048, system: SYSTEM, messages: msgs })
+  });
+  if (!res.ok) {
+    const d = await res.json().catch(() => ({}));
+    throw new Error(d?.error?.message || `HTTP ${res.status}`);
+  }
+  const d = await res.json();
+  return d.content?.[0]?.text || "مفيش رد";
+}
 
-            renderChatList();
-            scrollToBottom();
-        }
+function getErrMsg(e) {
+  const m = e.message || "";
+  if (m.includes("PROXY_URL")) return `**محتاج تضبط الـ Proxy** ⚙️\n\n${m}`;
+  if (m.includes("401")) return "**مفتاح الـ API غلط** 🔑\n\nتأكد من المفتاح في إعدادات الـ Cloudflare Worker.";
+  if (m.includes("429")) return "**تجاوزت الحد المسموح** ⏳\n\nاستنى شوية وجرب تاني.";
+  if (m.includes("Failed to fetch") || m.includes("NetworkError")) return "**مشكلة في الاتصال** 📡\n\nتأكد إن الـ Cloudflare Worker شغال وإن الـ CORS ضبّاط.";
+  return `**حصل خطأ** 😅\n\n\`${m}\``;
+}
 
-        function renderChatList() {
-            const list = document.getElementById("chatList");
-            if (chats.length === 0) {
-                list.innerHTML = '<p class="text-slate-500 text-xs text-center py-4">مفيش محادثات لسه</p>';
-                return;
-            }
-            list.innerHTML = chats.map(chat => {
-                const isActive = chat.id === currentChatId;
-                const title = chat.messages[0]?.content?.substring(0, 30) || chat.title;
-                const date = new Date(chat.createdAt).toLocaleDateString("ar-EG");
-                return `
-                    <div class="chat-item ${isActive ? "active" : ""}" onclick="loadChat('${chat.id}')">
-                        <div class="flex items-center gap-2 mb-1">
-                            <i class="fas fa-comment-alt text-[10px] ${isActive ? "text-indigo-400" : "text-slate-500"}"></i>
-                            <p class="text-xs font-bold ${isActive ? "text-white" : "text-slate-300"} truncate">${title}</p>
-                        </div>
-                        <p class="text-[10px] text-slate-500">${date} • ${chat.messages.length} رسالة</p>
-                    </div>
-                `;
-            }).join("");
-        }
+// ============================================================
+function render(role, content, id, doScroll = true) {
+  const isUser = role === "user", isErr = role === "err";
+  const row = document.createElement("div");
+  row.className = "msg-row " + (isUser ? "user" : "ai");
+  row.id = "msg_" + id;
+  const cls = "bubble " + (isUser ? "user" : isErr ? "ai err" : "ai");
+  row.innerHTML = isUser
+    ? `<div class="${cls}">${esc(content).replace(/\n/g,"<br>")}</div>`
+    : `<div class="${cls}"><div class="md">${mdRender(content)}</div>
+        <div class="b-actions">
+          <button class="b-act" onclick="copyTxt(${JSON.stringify(content)})"><i class="fas fa-copy"></i> نسخ</button>
+          <button class="b-act" onclick="regen('${id}')"><i class="fas fa-redo"></i> إعادة</button>
+        </div></div>`;
+  document.getElementById("messages").appendChild(row);
+  if (doScroll) scrollD();
+}
 
-        function saveChats() {
-            localStorage.setItem("shatter_chats", JSON.stringify(chats.slice(0, 50)));
-        }
+function mdRender(t) {
+  return t
+    .replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;")
+    .replace(/```(\w*)\n([\s\S]*?)```/g,(_,l,c)=>`<pre><code>${c.trim()}</code></pre>`)
+    .replace(/`([^`]+)`/g,"<code>$1</code>")
+    .replace(/^### (.+)$/gm,"<h3>$1</h3>").replace(/^## (.+)$/gm,"<h2>$1</h2>").replace(/^# (.+)$/gm,"<h1>$1</h1>")
+    .replace(/\*\*([^*]+)\*\*/g,"<strong>$1</strong>").replace(/\*([^*]+)\*/g,"<em>$1</em>")
+    .replace(/^> (.+)$/gm,"<blockquote>$1</blockquote>")
+    .replace(/^\* (.+)$/gm,"<li>$1</li>").replace(/^\d+\. (.+)$/gm,"<li>$1</li>")
+    .replace(/^---$/gm,"<hr>")
+    .replace(/\[([^\]]+)\]\(([^)]+)\)/g,'<a href="$2" target="_blank">$1</a>')
+    .replace(/\n/g,"<br>");
+}
 
-        function clearAllChats() {
-            if (!confirm("متأكد إنك عايز تمسح كل المحادثات؟")) return;
-            chats = [];
-            saveChats();
-            createNewChat();
-            renderChatList();
-            showToast("تم مسح كل المحادثات 🗑️");
-        }
+function esc(t) { const d=document.createElement("div"); d.textContent=t; return d.innerHTML; }
 
-        function quickAsk(text) {
-            document.getElementById("messageInput").value = text;
-            sendMessage();
-        }
+function copyTxt(t) { navigator.clipboard.writeText(t).then(()=>toast("تم النسخ 📋")); }
 
-        async function sendMessage() {
-            const input = document.getElementById("messageInput");
-            const text = input.value.trim();
+function regen(id) {
+  const c = chats.find(x => x.id === curId); if (!c) return;
+  const idx = c.messages.findIndex(m => m.id === id);
+  if (idx > 0 && c.messages[idx-1].role === "user") {
+    const q = c.messages[idx-1].content;
+    document.getElementById("msg_"+id)?.remove();
+    c.messages.splice(idx, 1);
+    history = c.messages.map(m => ({ role: m.role, content: m.content }));
+    save();
+    document.getElementById("msgIn").value = q; send();
+  }
+}
 
-            if (!text || isLoading) return;
+// ============================================================
+function scrollD() { const m=document.getElementById("messages"); m.scrollTop=m.scrollHeight; }
+function resize(el) { el.style.height="auto"; el.style.height=Math.min(el.scrollHeight,120)+"px"; }
+function onKey(e) { if(e.key==="Enter"&&!e.shiftKey){e.preventDefault();send();} }
+function toggleSb() { document.getElementById("sidebar").classList.toggle("open"); document.getElementById("sbOverlay").classList.toggle("open"); }
+function closeSb() { document.getElementById("sidebar").classList.remove("open"); document.getElementById("sbOverlay").classList.remove("open"); }
+function onModelChange() { const v=document.getElementById("modelSel").value; localStorage.setItem("ss_model",v); updateLabel(); const c=chats.find(x=>x.id===curId); if(c){c.model=v;save();} }
+function updateLabel() { const v=document.getElementById("modelSel").value; document.getElementById("modelLabel").textContent=MODEL_NAMES[v]||"Claude"; }
 
-            addMessage("user", text);
-            input.value = "";
+function toast(msg, type="ok") {
+  const t=document.getElementById("toast"), ic=document.getElementById("t-icon");
+  document.getElementById("t-msg").textContent=msg;
+  ic.className = type==="error"?"fas fa-exclamation-circle":type==="warn"?"fas fa-exclamation-triangle":"fas fa-check-circle";
+  ic.style.color = type==="error"?"#ef4444":type==="warn"?"#f59e0b":"#10b981";
+  t.classList.add("show"); setTimeout(()=>t.classList.remove("show"),3000);
+}
 
-            isLoading = true;
-            const btn = document.getElementById("sendBtn");
-            const icon = document.getElementById("sendIcon");
-            btn.classList.add("loading");
-            icon.className = "fas fa-spinner fa-spin";
-
-            const loadingId = "loading-" + Date.now();
-            addMessage("assistant", '<div class="flex items-center gap-2"><span class="typing-dot"></span><span class="typing-dot"></span><span class="typing-dot"></span></div>', loadingId);
-
-            try {
-                const response = await fetchAIResponse(text);
-                removeMessage(loadingId);
-                addMessage("assistant", response);
-                showToast("الرد جاهز! ✨");
-            } catch (error) {
-                removeMessage(loadingId);
-                addMessage("assistant", "**يا حبيب أخوك، حصلت مشكلة!** 😅\n\n" + error.message + "\n\nجرب تسأل تاني كمان شوية.");
-                showToast("الموديل مش متاح دلوقتي", "error");
-            } finally {
-                isLoading = false;
-                btn.classList.remove("loading");
-                icon.className = "fas fa-paper-plane";
-                scrollToBottom();
-            }
-        }
-
-        async function fetchAIResponse(query) {
-            const model = document.getElementById("modelSelect").value;
-
-            // إرسال الطلب للـ Worker بدون الـ Authorization header لأن الـ Worker شايله جواه أساساً
-            const response = await fetch(GROQ_URL, {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify({
-                    model: model,
-                    messages: [
-                        { role: "system", content: SYSTEM_PROMPT },
-                        { role: "user", content: query }
-                    ]
-                })
-            });
-
-            if (!response.ok) {
-                const errorData = await response.json().catch(() => ({}));
-                throw new Error(errorData.error?.message || "HTTP " + response.status);
-            }
-
-            const data = await response.json();
-
-            if (!data.choices || !data.choices[0] || !data.choices[0].message) {
-                throw new Error("الرد فاضي من السيرفر");
-            }
-
-            return data.choices[0].message.content;
-        }
-
-        function addMessage(role, content, id) {
-            const chat = chats.find(c => c.id === currentChatId);
-            if (!chat) return;
-
-            const msgId = id || Date.now().toString();
-            const msg = { role, content, id: msgId, timestamp: new Date().toISOString() };
-            chat.messages.push(msg);
-
-            if (role === "user" && chat.messages.filter(m => m.role === "user").length === 1) {
-                chat.title = content.substring(0, 40);
-            }
-
-            saveChats();
-            renderMessage(role, content, msgId);
-            scrollToBottom();
-        }
-
-        function renderMessage(role, content, id) {
-            const container = document.getElementById("messagesContainer");
-            const div = document.createElement("div");
-            div.id = id;
-            div.className = "flex " + (role === "user" ? "justify-start" : "justify-end");
-
-            const isUser = role === "user";
-            div.innerHTML = `
-                <div class="message-bubble ${isUser ? "message-user" : "message-ai"}">
-                    <div class="markdown-content ${isUser ? "text-white" : "text-slate-200"}">
-                        ${isUser ? escapeHtml(content) : renderMarkdown(content)}
-                    </div>
-                    ${!isUser ? `
-                        <div class="flex items-center gap-2 mt-3 pt-2 border-t border-white/5">
-                            <button onclick="copyMessage('${id}')" class="text-[10px] text-slate-500 hover:text-indigo-400 transition-colors flex items-center gap-1">
-                                <i class="fas fa-copy"></i> نسخ
-                            </button>
-                            <button onclick="regenerateMessage('${id}')" class="text-[10px] text-slate-500 hover:text-indigo-400 transition-colors flex items-center gap-1">
-                                <i class="fas fa-redo"></i> إعادة
-                            </button>
-                        </div>
-                    ` : ""}
-                </div>
-            `;
-
-            container.appendChild(div);
-        }
-
-        function removeMessage(id) {
-            const el = document.getElementById(id);
-            if (el) el.remove();
-            const chat = chats.find(c => c.id === currentChatId);
-            if (chat) {
-                chat.messages = chat.messages.filter(m => m.id !== id);
-                saveChats();
-            }
-        }
-
-        function renderMarkdown(text) {
-            return text
-                .replace(/^### (.*$)/gim, "<h3>$1</h3>")
-                .replace(/^## (.*$)/gim, "<h2>$1</h2>")
-                .replace(/^# (.*$)/gim, "<h1>$1</h1>")
-                .replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>")
-                .replace(/\*(.*?)\*/g, "<em>$1</em>")
-                .replace(/```(\w+)?\n([\s\S]*?)```/g, "<pre><code>$2</code></pre>")
-                .replace(/`([^`]+)`/g, "<code>$1</code>")
-                .replace(/^> (.*$)/gim, "<blockquote>$1</blockquote>")
-                .replace(/^\* (.*$)/gim, "<li>$1</li>")
-                .replace(/^\d+\. (.*$)/gim, "<li>$1</li>")
-                .replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" target="_blank" class="text-indigo-400 hover:text-indigo-300">$1</a>')
-                .replace(/\n/g, "<br>");
-        }
-
-        function escapeHtml(text) {
-            const div = document.createElement("div");
-            div.textContent = text;
-            return div.innerHTML.replace(/\n/g, "<br>");
-        }
-
-        function copyMessage(id) {
-            const chat = chats.find(c => c.id === currentChatId);
-            const msg = chat?.messages.find(m => m.id === id);
-            if (msg) {
-                navigator.clipboard.writeText(msg.content).then(() => showToast("تم النسخ! 📋"));
-            }
-        }
-
-        function regenerateMessage(id) {
-            const chat = chats.find(c => c.id === currentChatId);
-            const msgIndex = chat?.messages.findIndex(m => m.id === id);
-            if (msgIndex > 0 && chat.messages[msgIndex - 1].role === "user") {
-                const userQuery = chat.messages[msgIndex - 1].content;
-                removeMessage(id);
-                sendMessageWithText(userQuery);
-            }
-        }
-
-        async function sendMessageWithText(text) {
-            document.getElementById("messageInput").value = text;
-            await sendMessage();
-        }
-
-        function toggleSidebar() {
-            document.getElementById("sidebar").classList.toggle("open");
-            document.getElementById("sidebarOverlay").classList.toggle("open");
-        }
-
-        function saveModel() {
-            const model = document.getElementById("modelSelect").value;
-            localStorage.setItem("shatter_model", model);
-            updateModelBadge(model);
-
-            const chat = chats.find(c => c.id === currentChatId);
-            if (chat) {
-                chat.model = model;
-                saveChats();
-            }
-        }
-
-        function updateModelBadge(model) {
-            const names = {
-                "llama-3.1-8b-instant": "Llama 3.1",
-                "llama-3.3-70b-versatile": "Llama 3.3",
-                "meta-llama/llama-4-scout-17b-16e-instruct": "Llama 4",
-                "qwen/qwen3-32b": "Qwen 3",
-                "openai/gpt-oss-20b": "GPT-OSS"
-            };
-            document.getElementById("currentModel").textContent = names[model] || model;
-        }
-
-        function scrollToBottom() {
-            const area = document.getElementById("chatArea");
-            area.scrollTo({ top: area.scrollHeight, behavior: "smooth" });
-        }
-
-        function showToast(message, type) {
-            const toast = document.getElementById("toast");
-            const icon = document.getElementById("toastIcon");
-            const msg = document.getElementById("toastMessage");
-
-            msg.innerText = message;
-            if (type === "error") {
-                icon.className = "fas fa-exclamation-circle text-rose-400";
-            } else if (type === "warning") {
-                icon.className = "fas fa-exclamation-triangle text-amber-400";
-            } else {
-                icon.className = "fas fa-check-circle text-emerald-400";
-            }
-
-            toast.classList.add("show");
-            setTimeout(() => toast.classList.remove("show"), 3000);
-        }
-
-        function shareApp() {
-            if (navigator.share) {
-                navigator.share({
-                    title: "Shatter Search",
-                    text: "جرب محرك البحث الذكي ده!",
-                    url: window.location.href
-                });
-            } else {
-                navigator.clipboard.writeText(window.location.href);
-                showToast("تم نسخ الرابط! 🔗");
-            }
-        }
-
-        document.getElementById("messageInput").addEventListener("keydown", function(e) {
-            if (e.key === "Enter" && !e.shiftKey) {
-                e.preventDefault();
-                sendMessage();
-            }
-        });
-
-        document.addEventListener("keydown", function(e) {
-            if (e.key === "Escape") {
-                document.getElementById("sidebar").classList.remove("open");
-                document.getElementById("sidebarOverlay").classList.remove("open");
-            }
-        });
-
-        init();
-    </script>
+init();
+</script>
 </body>
 </html>
