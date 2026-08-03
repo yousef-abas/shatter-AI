@@ -3,35 +3,31 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>تطبيق ريان - الأذكار اليومية</title>
-<link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
+<title>تطبيق ريان - الأذكار الشاملة</title>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
 <style>
-  * { box-sizing: border-box; margin: 0; padding: 0; }
+  * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Cairo', sans-serif; }
   
   body {
-    background: linear-gradient(rgba(10, 25, 18, 0.92), rgba(5, 15, 10, 0.96)), 
-                url('https://images.unsplash.com/photo-1519741497674-611481863552?q=80&w=1600&auto=format&fit=crop') no-repeat center center fixed;
-    background-size: cover;
-    font-family: 'Amiri', serif;
-    color: #f4ecdf;
+    background: #f0f4f8;
+    color: #333;
     min-height: 100vh;
     display: flex;
     flex-direction: column;
     align-items: center;
-    overflow-x: hidden;
   }
 
-  /* ── 1. SPLASH SCREEN (الافتتاحية) ── */
+  /* ── 1. SPLASH SCREEN (الافتتاحية الفخمة) ── */
   #splash-screen {
     position: fixed;
     inset: 0;
-    background: radial-gradient(circle, rgba(15,35,25,0.98) 0%, rgba(5,12,8,1) 100%);
+    background: linear-gradient(135deg, #0077b6 0%, #03045e 100%);
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
     z-index: 10000;
-    transition: opacity 0.8s ease, visibility 0.8s ease;
+    transition: opacity 0.6s ease, visibility 0.6s ease;
     padding: 20px;
     text-align: center;
   }
@@ -41,334 +37,363 @@
     pointer-events: none;
   }
 
-  /* تأثير نزول المسجد من الأعلى */
-  .splash-logo-box {
-    width: 100px;
-    height: 100px;
+  .splash-icon {
+    width: 90px;
+    height: 90px;
+    background: rgba(255, 255, 255, 0.15);
     border-radius: 50%;
-    background: linear-gradient(135deg, #b89237 0%, #7d632c 100%);
-    border: 3px double #f7e6b0;
     display: flex;
     align-items: center;
     justify-content: center;
-    box-shadow: 0 10px 30px rgba(184, 146, 55, 0.4);
+    font-size: 3rem;
     margin-bottom: 20px;
-    animation: dropDownFromTop 1.2s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+    animation: bounce 2s infinite;
   }
-
-  @keyframes dropDownFromTop {
-    0% {
-      transform: translateY(-120px);
-      opacity: 0;
-    }
-    100% {
-      transform: translateY(0);
-      opacity: 1;
-    }
-  }
-
-  .splash-logo-box svg {
-    width: 50px;
-    height: 50px;
-    fill: #f7e6b0;
-    filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));
+  @keyframes bounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
   }
 
   .splash-title {
     font-size: 3rem;
-    color: #f7e6b0;
-    margin-bottom: 2px;
-    letter-spacing: 1px;
-    text-shadow: 0 4px 10px rgba(0,0,0,0.5);
-    animation: fadeIn 1.5s ease;
+    color: #fff;
+    font-weight: 900;
+    margin-bottom: 5px;
   }
-
   .splash-author {
     font-size: 1.1rem;
-    color: #e2cca8;
-    font-family: 'Amiri', serif;
+    color: #caf0f8;
     margin-bottom: 30px;
-    letter-spacing: 1px;
-    animation: fadeIn 1.8s ease;
+    font-weight: 600;
   }
-
-  @keyframes fadeIn {
-    from { opacity: 0; transform: translateY(10px); }
-    to { opacity: 1; transform: translateY(0); }
-  }
-
   .enter-btn {
-    background: linear-gradient(135deg, #b89237 0%, #634d1b 100%);
-    color: #fff;
-    border: 1px solid #f7e6b0;
-    padding: 12px 35px;
-    border-radius: 35px;
-    font-family: 'Amiri', serif;
+    background: #48cae4;
+    color: #03045e;
+    border: none;
+    padding: 14px 40px;
+    border-radius: 30px;
     font-size: 1.2rem;
+    font-weight: 700;
     cursor: pointer;
-    box-shadow: 0 6px 20px rgba(0,0,0,0.4);
-    transition: all 0.3s ease;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.3);
+    transition: transform 0.2s;
   }
+  .enter-btn:active { transform: scale(0.95); }
 
-  .enter-btn:hover {
-    transform: scale(1.05);
-    box-shadow: 0 8px 25px rgba(184, 146, 55, 0.5);
-  }
-
-  /* ── 2. MAIN APP CONTAINER (التطبيق الرئيسي) ── */
+  /* ── 2. MAIN APP ── */
   .app-container {
-    opacity: 0;
-    transition: opacity 1s ease 0.3s;
+    display: none;
     width: 100%;
-    max-width: 500px;
+    max-width: 480px;
+    min-height: 100vh;
+    background: #f8f9fa;
+    box-shadow: 0 0 20px rgba(0,0,0,0.05);
+    position: relative;
+    padding-bottom: 30px;
+  }
+  .app-container.visible { display: block; }
+
+  /* الهيدر العلوي */
+  .app-header {
+    background: linear-gradient(135deg, #0096c7, #0077b6);
+    color: #fff;
+    padding: 25px 20px 20px 20px;
+    border-radius: 0 0 25px 25px;
+    text-align: center;
+    box-shadow: 0 4px 15px rgba(0,118,182,0.3);
+    position: relative;
+  }
+  .app-header h1 { font-size: 1.6rem; font-weight: 700; }
+  .app-header p { font-size: 0.85rem; color: #ade8f4; margin-top: 4px; }
+
+  .back-btn {
+    position: absolute;
+    right: 20px;
+    top: 25px;
+    background: rgba(255,255,255,0.2);
+    border: none;
+    color: #fff;
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    font-size: 1rem;
+    cursor: pointer;
+    display: none;
+    align-items: center;
+    justify-content: center;
+  }
+
+  /* شبكة الأقسام (Grid) */
+  .grid-menu {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    padding: 20px;
+  }
+
+  .grid-item {
+    background: #ffffff;
+    border-radius: 16px;
+    padding: 16px 12px;
+    text-align: center;
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.04);
+    border: 1px solid #e9ecef;
+    transition: transform 0.2s, box-shadow 0.2s;
     display: flex;
     flex-direction: column;
     align-items: center;
-    padding: 30px 14px;
+    justify-content: center;
+    min-height: 110px;
   }
-  .app-container.visible {
-    opacity: 1;
-  }
+  .grid-item:active { transform: scale(0.96); }
+  .grid-item .icon { font-size: 2.2rem; margin-bottom: 8px; }
+  .grid-item .title { font-size: 0.95rem; font-weight: 700; color: #212529; }
 
-  header {
-    text-align: center;
-    margin-bottom: 20px;
-    width: 100%;
+  /* صفحة عرض الأذكار الخاصة بالقسم */
+  .section-view {
+    display: none;
+    padding: 20px;
   }
-
-  .app-header-title {
-    font-size: 2.4rem;
-    color: #f7e6b0;
-    margin-bottom: 2px;
-  }
-
-  .app-header-sub {
-    font-size: 0.8rem;
-    color: #c5b299;
-    font-family: 'Montserrat', sans-serif;
-    letter-spacing: 1px;
-  }
-
-  /* ── TABS (التبويبات) ── */
-  .tabs-container {
-    display: flex;
-    gap: 12px;
-    margin-bottom: 25px;
-    width: 100%;
-  }
-
-  .tab-btn {
-    flex: 1;
-    padding: 12px;
-    background: rgba(18, 30, 22, 0.8);
-    border: 1px solid rgba(184, 146, 55, 0.5);
-    border-radius: 12px;
-    color: #f4ecdf;
-    font-family: 'Amiri', serif;
-    font-size: 1.15rem;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
-  }
-
-  .tab-btn.active {
-    background: linear-gradient(135deg, #b89237 0%, #7d632c 100%);
-    color: #fff;
-    font-weight: bold;
-    border-color: #f7e6b0;
-    box-shadow: 0 6px 20px rgba(184, 146, 55, 0.35);
-  }
-
-  /* ── ATHKAR LIST CARDS ── */
-  .athkar-list {
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    gap: 18px;
-    padding-bottom: 40px;
-  }
+  .section-view.active { display: block; }
 
   .thikr-card {
-    background: rgba(18, 32, 24, 0.88);
-    backdrop-filter: blur(10px);
-    border: 1px solid rgba(184, 146, 55, 0.4);
+    background: #ffffff;
     border-radius: 14px;
-    padding: 20px;
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
-    transition: all 0.3s ease;
+    padding: 18px;
+    margin-bottom: 15px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.04);
+    border-right: 4px solid #0077b6;
   }
-
   .thikr-card.completed {
-    opacity: 0.45;
-    border-color: #3b5443;
-    background: rgba(12, 22, 16, 0.7);
+    opacity: 0.5;
+    background: #f1f3f5;
+    border-right-color: #adb5bd;
   }
-
   .thikr-text {
-    font-size: 1.25rem;
-    line-height: 1.95;
-    color: #f7e6b0;
-    margin-bottom: 14px;
-    text-align: right;
+    font-size: 1.05rem;
+    line-height: 1.8;
+    color: #212529;
+    margin-bottom: 12px;
   }
-
   .thikr-footer {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    border-top: 1px solid rgba(184, 146, 55, 0.2);
-    padding-top: 12px;
-    margin-top: 10px;
-    gap: 10px;
+    border-top: 1px solid #f1f3f5;
+    padding-top: 10px;
   }
-
   .thikr-virtue {
-    font-size: 0.82rem;
-    color: #c5b299;
-    line-height: 1.4;
+    font-size: 0.78rem;
+    color: #6c757d;
+    max-width: 60%;
   }
-
   .counter-btn {
-    background: linear-gradient(135deg, #b89237 0%, #7d632c 100%);
-    border: 1px solid #f7e6b0;
+    background: #0077b6;
     color: #fff;
-    padding: 8px 20px;
-    border-radius: 30px;
-    font-family: 'Montserrat', sans-serif;
-    font-size: 1rem;
-    font-weight: 600;
+    border: none;
+    padding: 6px 16px;
+    border-radius: 20px;
+    font-weight: 700;
+    font-size: 0.9rem;
     cursor: pointer;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
-    transition: transform 0.1s ease, background 0.3s ease;
-    min-width: 75px;
-    text-align: center;
   }
-
-  .counter-btn:active {
-    transform: scale(0.92);
-  }
-
   .counter-btn.done {
-    background: #24382a;
-    color: #7fa38a;
-    border-color: #43634e;
+    background: #e9ecef;
+    color: #495057;
   }
 </style>
 </head>
 <body>
 
-  <!-- شاشة الافتتاحية (Splash Screen) -->
+  <!-- 1. الشاشة الافتتاحية -->
   <div id="splash-screen">
-    <div class="splash-logo-box">
-      <!-- أيقونة مسجد SVG بتفاصيل راقية -->
-      <svg viewBox="0 0 24 24">
-        <path d="M12 2L3 9v2h2v10h14V11h2V9L12 2zm0 2.84L17.16 9H6.84L12 4.84zM7 19v-6h2v6H7zm4 0v-8h2v8h-2zm4 0v-6h2v6h-2z"/>
-      </svg>
-    </div>
+    <div class="splash-icon">📖</div>
     <div class="splash-title">ريـان</div>
     <div class="splash-author">إعداد: يوسف عباس</div>
-    <button class="enter-btn" onclick="openApp()">ابدأ الأذكار ✨</button>
+    <button class="enter-btn" onclick="openApp()">دخول التطبيق ✨</button>
   </div>
 
-  <!-- التطبيق الرئيسي -->
+  <!-- 2. التطبيق الرئيسي -->
   <div class="app-container" id="appContainer">
-    <header>
-      <div class="app-header-title">ريـان</div>
-      <div class="app-header-sub">أذكار الصباح والمساء كاملة</div>
-    </header>
-
-    <div class="tabs-container">
-      <button class="tab-btn active" id="morningTab" onclick="switchTab('morning')">أذكار الصباح</button>
-      <button class="tab-btn" id="eveningTab" onclick="switchTab('evening')">أذكار المساء</button>
+    
+    <div class="app-header">
+      <button class="back-btn" id="backBtn" onclick="goHome()">⬅</button>
+      <h1 id="headerTitle">حصن المسلم</h1>
+      <p id="headerSub">أذكار من صحيح السنة النبوية</p>
     </div>
 
-    <div class="athkar-list" id="athkarList">
-      <!-- يتم تعبئة الأذكار برمجياً -->
+    <!-- قائمة الأقسام الرئيسية (تشبه الصورة تماماً) -->
+    <div class="grid-menu" id="gridMenu">
+      <div class="grid-item" onclick="openSection('morning')">
+        <div class="icon">🌅</div>
+        <div class="title">أذكار الصباح</div>
+      </div>
+      <div class="grid-item" onclick="openSection('evening')">
+        <div class="icon">🌙</div>
+        <div class="title">أذكار المساء</div>
+      </div>
+      <div class="grid-item" onclick="openSection('sleep')">
+        <div class="icon">🛌</div>
+        <div class="title">أذكار النوم</div>
+      </div>
+      <div class="grid-item" onclick="openSection('mosque')">
+        <div class="icon">🕌</div>
+        <div class="title">أذكار المسجد</div>
+      </div>
+      <div class="grid-item" onclick="openSection('home')">
+        <div class="icon">🏠</div>
+        <div class="title">أذكار البيت</div>
+      </div>
+      <div class="grid-item" onclick="openSection('food')">
+        <div class="icon">🍲</div>
+        <div class="title">أذكار الأكل والشرب</div>
+      </div>
+      <div class="grid-item" onclick="openSection('salah')">
+        <div class="icon">🤲</div>
+        <div class="title">أذكار الصلاة</div>
+      </div>
+      <div class="grid-item" onclick="openSection('travel')">
+        <div class="icon">✈️</div>
+        <div class="title">أذكار السفر</div>
+      </div>
     </div>
+
+    <!-- عرض الأذكار للقسم المحدد -->
+    <div class="section-view" id="sectionView">
+      <div id="athkarListContainer"></div>
+    </div>
+
   </div>
 
 <script>
-  // قاعدة بيانات أذكار الصباح والمساء
-  const athkarData = {
-    morning: [
-      { text: "أَصْبَحْنَا وَأَصْبَحَ المُلْكُ لِلَّهِ، وَالحَمْدُ لِلَّهِ لَا إِلَهَ إِلَّا اللَّهُ وَحْدَهُ لَا شَرِيكَ لَهُ، لَهُ المُلْكُ وَلَهُ الحَمْدُ وَهُوَ عَلَى كُلِّ شَيْءٍ قَدِيرٌ.", count: 1, virtue: "يُقال مرة واحدة في الصباح" },
-      { text: "اللَّهُمَّ بِكَ أَصْبَحْنَا، وَبِكَ أَمْسَيْنَا، وَبِكَ نَحْيَا، وَبِكَ نَمُوتُ، وَإِلَيْكَ النُّشُورُ.", count: 1, virtue: "دعاء جامع لطلب العون والبركة" },
-      { text: "اللَّهُمَّ أَنْتَ رَبِّي لَا إِلَهَ إِلَّا أَنْتَ، خَلَقْتَنِي وَأَنَا عَبْدُكَ، وَأَنَا عَلَى عَهْدِكَ وَوَعْدِكَ مَا اسْتَطَعْتُ...", count: 1, virtue: "سَيِّدُ الِاسْتِغْفَارِ" },
-      { text: "رَضِيتُ بِاللَّهِ رَبّاً، وَبِالْإِسْلَامِ دِيناً، وَبِمُحَمَّدٍ صَلَّى اللَّهُ عَلَيْهِ وَسَلَّمَ نَبِيّاً.", count: 3, virtue: "حق على الله أن يرضيه يوم القيامة" },
-      { text: "بِسْمِ اللَّهِ الَّذِي لَا يَضُرُّ مَعَ اسْمِهِ شَيْءٌ فِي الأَرْضِ وَلَا فِي السَّمَاءِ وَهُوَ السَّمِيعُ العَلِيمُ.", count: 3, virtue: "لم يضره شيء حتى يُمسي" },
-      { text: "سُبْحَانَ اللَّهِ وَبِحَمْدِهِ، عَدَدَ خَلْقِهِ، وَرِضَا نَفْسِهِ، وَزِنَةَ عَرْشِهِ، وَمِدَادَ كَلِمَاتِهِ.", count: 3, virtue: "أجر عظيم وثواب مضاعف" },
-      { text: "يَا حَيُّ يَا قَيُّومُ، بِرَحْمَتِكَ أَسْتَغِيثُ، أَصْلِحْ لي شَأْنِي كُلَّهُ، وَلَا تَكِلْنِي إِلَى نَفْسِي طَرْفَةَ عَيْنٍ.", count: 1, virtue: "إصلاح الشأن والاعتماد على الله" }
-    ],
-    evening: [
-      { text: "أَمْسَيْنَا وَأَمْسَى المُلْكُ لِلَّهِ، وَالحَمْدُ لِلَّهِ لَا إِلَهَ إِلَّا اللَّهُ وَحْدَهُ لَا شَرِيكَ لَهُ، لَهُ المُلْكُ وَلَهُ الحَمْدُ وَهُوَ عَلَى كُلِّ شَيْءٍ قَدِيرٌ.", count: 1, virtue: "يُقال مرة واحدة في المساء" },
-      { text: "اللَّهُمَّ بِكَ أَمْسَيْنَا، وَبِكَ أَصْبَحْنَا، وَبِكَ نَحْيَا، وَبِكَ نَمُوتُ، وَإِلَيْكَ المَصِيرُ.", count: 1, virtue: "دعاء جامع للمساء" },
-      { text: "اللَّهُمَّ أَنْتَ رَبِّي لَا إِلَهَ إِلَّا أَنْتَ، خَلَقْتَنِي وَأَنَا عَبْدُكَ، وَأَنَا عَلَى عَهْدِكَ وَوَعْدِكَ مَا اسْتَطَعْتُ...", count: 1, virtue: "سَيِّدُ الِاسْتِغْفَارِ" },
-      { text: "رَضِيتُ بِاللَّهِ رَبّاً، وَبِالْإِسْلَامِ دِيناً، وَبِمُحَمَّدٍ صَلَّى اللَّهُ عَلَيْهِ وَسَلَّمَ نَبِيّاً.", count: 3, virtue: "حق على الله أن يرضيه" },
-      { text: "بِسْمِ اللَّهِ الَّذِي لَا يَضُرُّ مَعَ اسْمِهِ شَيْءٌ فِي الأَرْضِ وَلَا فِي السَّمَاءِ وَهُوَ السَّمِيعُ العَلِيمُ.", count: 3, virtue: "لم يضره شيء حتى يُصبح" },
-      { text: "أَعُوذُ بِكَلِمَاتِ اللَّهِ التَّامَّاتِ مِنْ شَرِّ مَا خَلَقَ.", count: 3, virtue: "حفظ من كل أذى وضرر" },
-      { text: "اللَّهُمَّ إِنِّي أَمْسَيْتُ أُشْهِدُكَ، وَأُشْهِدُ حَمَلَةَ عَرْشِكَ، وَمَلَائِكَتَكَ، وَجَمِيعَ خَلْقِكَ، أَنَّكَ أَنْتَ اللَّهُ لَا إِلَهَ إِلَّا أَنْتَ...", count: 4, virtue: "عتق من النار" }
-    ]
+  // قاعدة بيانات كاملة للأقسام وأذكارها
+  const sectionsData = {
+    morning: {
+      title: "أذكار الصباح",
+      items: [
+        { text: "أَصْبَحْنَا وَأَصْبَحَ المُلْكُ لِلَّهِ، وَالحَمْدُ لِلَّهِ لَا إِلَهَ إِلَّا اللَّهُ وَحْدَهُ لَا شَرِيكَ لَهُ...", count: 1, virtue: "لَهُ المُلْكُ وَلَهُ الحَمْدُ" },
+        { text: "اللَّهُمَّ بِكَ أَصْبَحْنَا، وَبِكَ أَمْسَيْنَا، وَبِكَ نَحْيَا، وَبِكَ نَمُوتُ، وَإِلَيْكَ النُّشُورُ.", count: 1, virtue: "دعاء جامع للصباح" },
+        { text: "رَضِيتُ بِاللَّهِ رَبّاً، وَبِالْإِسْلَامِ دِيناً، وَبِمُحَمَّدٍ صَلَّى اللَّهُ عَلَيْهِ وَسَلَّمَ نَبِيّاً.", count: 3, virtue: "حق على الله أن يرضيه" }
+      ]
+    },
+    evening: {
+      title: "أذكار المساء",
+      items: [
+        { text: "أَمْسَيْنَا وَأَمْسَى المُلْكُ لِلَّهِ، وَالحَمْدُ لِلَّهِ لَا إِلَهَ إِلَّا اللَّهُ وَحْدَهُ لَا شَرِيكَ لَهُ...", count: 1, virtue: "لَهُ المُلْكُ وَلَهُ الحَمْدُ" },
+        { text: "اللَّهُمَّ بِكَ أَمْسَيْنَا، وَبِكَ أَصْبَحْنَا، وَبِكَ نَحْيَا، وَبِكَ نَمُوتُ، وَإِلَيْكَ المَصِيرُ.", count: 1, virtue: "دعاء جامع للمساء" },
+        { text: "أَعُوذُ بِكَلِمَاتِ اللَّهِ التَّامَّاتِ مِنْ شَرِّ مَا خَلَقَ.", count: 3, virtue: "حفظ من كل أذى" }
+      ]
+    },
+    sleep: {
+      title: "أذكار النوم",
+      items: [
+        { text: "بِاسْمِكَ رَبِّي وَضَعْتُ جَنْبِي، وَبِكَ أَرْفَعُهُ، إِنْ أَمْسَكْتَ نَفْسِي فَارْحَمْهَا...", count: 1, virtue: "دعاء الاضطجاع للنوم" },
+        { text: "اللَّهُمَّ قِنِي عَذَابَكَ يَوْمَ تَبْعَثُ عِبَادَكَ.", count: 3, virtue: "يُقال عند وضع اليد تحت الخد" }
+      ]
+    },
+    mosque: {
+      title: "أذكار المسجد",
+      items: [
+        { text: "بِسْمِ اللَّهِ، وَالصَّلَاةُ وَالسَّلَامُ عَلَى رَسُولِ اللَّهِ، اللَّهُمَّ افْتَحْ لِي أَبْوَابَ رَحْمَتِكَ.", count: 1, virtue: "عند دخول المسجد" },
+        { text: "اللَّهُمَّ إِنِّى أَسْأَلُكَ مِنْ فَضْلِكَ.", count: 1, virtue: "عند الخروج من المسجد" }
+      ]
+    },
+    home: {
+      title: "أذكار البيت",
+      items: [
+        { text: "بِسْمِ اللَّهِ وَلَجْنَا، وَبِسْمِ اللَّهِ خَرَجْنَا، وَعَلَى رَبِّنَا تَوَكَّلْنَا.", count: 1, virtue: "عند دخول البيت" }
+      ]
+    },
+    food: {
+      title: "أذكار الأكل والشرب",
+      items: [
+        { text: "بِسْمِ اللَّهِ (وإذا نسي في أوله فليقل: بِسْمِ اللَّهِ فِي أَوَّلِهِ وَآخِرِهِ).", count: 1, virtue: "عند بدء الطعام" },
+        { text: "الْحَمْدُ لِلَّهِ الَّذِي أَطْعَمَنِي هَذَا وَرَزَقَنِيهِ مِنْ غَيْرِ حَوْلٍ مِنِّي وَلَا قُوَّةٍ.", count: 1, virtue: "بعد الفراغ من الطعام" }
+      ]
+    },
+    salah: {
+      title: "أذكار الصلاة",
+      items: [
+        { text: "أَسْتَغْفِرُ اللَّهَ (ثلاثاً)، اللَّهُمَّ أَنْتَ السَّلَامُ وَمِنْكَ السَّلَامُ، تَبَارَكْتَ يَا ذَا الجَلَالِ وَالإِكْرَامِ.", count: 1, virtue: "أذكار التسليم من الصلاة" }
+      ]
+    },
+    travel: {
+      title: "أذكار السفر",
+      items: [
+        { text: "سُبْحَانَ الَّذِي سَخَّرَ لَنَا هَذَا وَمَا كُنَّا لَهُ مُقْرِنِينَ وَإِنَّا إِلَى رَبِّنَا لَمُنْقَلِبُونَ.", count: 1, virtue: "دعاءركوب الدابة/الوسيلة" }
+      ]
+    }
   };
 
-  let currentCategory = 'morning';
-  let counters = {};
+  let activeCounters = {};
 
   function openApp() {
-    const splash = document.getElementById('splash-screen');
-    const container = document.getElementById('appContainer');
-
-    splash.classList.add('hidden');
-    container.classList.add('visible');
+    document.getElementById('splash-screen').classList.add('hidden');
+    document.getElementById('appContainer').classList.add('visible');
   }
 
-  function switchTab(category) {
-    currentCategory = category;
-    document.getElementById('morningTab').classList.toggle('active', category === 'morning');
-    document.getElementById('eveningTab').classList.toggle('active', category === 'evening');
-    initCounters();
-    renderAthkar();
-  }
+  function openSection(sectionKey) {
+    const data = sectionsData[sectionKey];
+    if (!data) return;
 
-  function initCounters() {
-    counters[currentCategory] = {};
-    athkarData[currentCategory].forEach((item, index) => {
-      counters[currentCategory][index] = item.count;
+    // تغيير العنوان وهيدر الصفحة
+    document.getElementById('headerTitle').innerText = data.title;
+    document.getElementById('headerSub').innerText = "حصن المسلم - يوسف عباس";
+    document.getElementById('backBtn').style.display = 'flex';
+    document.getElementById('gridMenu').style.display = 'none';
+    
+    const view = document.getElementById('sectionView');
+    view.classList.add('active');
+
+    // تجهيز العدادات الخاصة بهذا القسم
+    activeCounters[sectionKey] = {};
+    data.items.forEach((item, idx) => {
+      activeCounters[sectionKey][idx] = item.count;
     });
+
+    renderSectionItems(sectionKey);
   }
 
-  function renderAthkar() {
-    const list = document.getElementById('athkarList');
-    list.innerHTML = '';
+  function renderSectionItems(sectionKey) {
+    const data = sectionsData[sectionKey];
+    const container = document.getElementById('athkarListContainer');
+    container.innerHTML = '';
 
-    athkarData[currentCategory].forEach((item, index) => {
-      const remaining = counters[currentCategory][index];
+    data.items.forEach((item, idx) => {
+      const remaining = activeCounters[sectionKey][idx];
       const isDone = remaining === 0;
 
       const card = document.createElement('div');
       card.className = `thikr-card ${isDone ? 'completed' : ''}`;
-      
       card.innerHTML = `
         <div class="thikr-text">${item.text}</div>
         <div class="thikr-footer">
           <div class="thikr-virtue">${item.virtue}</div>
-          <button class="counter-btn ${isDone ? 'done' : ''}" onclick="decrementCounter(${index})">
+          <button class="counter-btn ${isDone ? 'done' : ''}" onclick="decreaseCount('${sectionKey}', ${idx})">
             ${isDone ? 'تم ✓' : remaining}
           </button>
         </div>
       `;
-      list.appendChild(card);
+      container.appendChild(card);
     });
   }
 
-  function decrementCounter(index) {
-    if (counters[currentCategory][index] > 0) {
-      counters[currentCategory][index]--;
-      renderAthkar();
+  function decreaseCount(sectionKey, idx) {
+    if (activeCounters[sectionKey][idx] > 0) {
+      activeCounters[sectionKey][idx]--;
+      renderSectionItems(sectionKey);
     }
   }
 
-  initCounters();
-  renderAthkar();
+  function goHome() {
+    document.getElementById('headerTitle').innerText = "حصن المسلم";
+    document.getElementById('headerSub').innerText = "أذكار من صحيح السنة النبوية";
+    document.getElementById('backBtn').style.display = 'none';
+    document.getElementById('gridMenu').style.display = 'grid';
+    document.getElementById('sectionView').classList.remove('active');
+  }
 </script>
 
 </body>
