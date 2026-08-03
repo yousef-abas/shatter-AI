@@ -84,16 +84,10 @@
     font-size: 1rem;
     color: #90e0ef;
     font-weight: 600;
-    margin-bottom: 8px;
+    margin-bottom: 25px;
     letter-spacing: 0.5px;
   }
 
-  .splash-author {
-    font-size: 1rem;
-    color: #ade8f4;
-    margin-bottom: 30px;
-    font-weight: 600;
-  }
   .enter-btn {
     background: #00b4d8;
     color: #fff;
@@ -149,7 +143,7 @@
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     gap: 12px;
-    padding-bottom: 20px;
+    padding-bottom: 10px;
   }
 
   .grid-item {
@@ -175,6 +169,16 @@
   .grid-item:active { transform: scale(0.96); }
   .grid-item .icon { font-size: 2.3rem; margin-bottom: 8px; }
   .grid-item .title { font-size: 0.95rem; font-weight: 700; color: #1e293b; }
+
+  /* تذييل الصفحة باللغة الإنجليزية في الأسفل */
+  .app-footer-credit {
+    text-align: center;
+    font-size: 0.75rem;
+    color: #94a3b8;
+    padding: 10px 0 5px 0;
+    font-family: sans-serif;
+    letter-spacing: 0.5px;
+  }
 
   /* ── 3. عرض الأذكار الداخلية والزر الكبير المميز ── */
   .section-view {
@@ -267,7 +271,6 @@
       <div class="splash-icon">📖</div>
       <div class="splash-title">ريـان</div>
       <div class="splash-subtitle-custom">طاعه لمولاك وراحة بدنياك</div>
-      <div class="splash-author">إعداد: يوسف عباس</div>
       <button class="enter-btn" id="enterAppBtn">دخول التطبيق ✨</button>
     </div>
 
@@ -337,6 +340,9 @@
       <div class="section-view" id="sectionView">
         <div id="athkarListContainer"></div>
       </div>
+
+      <!-- التوقيع بالإنجليزية في أسفل الصفحة -->
+      <div class="app-footer-credit">Designed & Prepared by Youssef Abbas</div>
     </div>
 
   </div>
@@ -448,7 +454,6 @@
 
   let activeCounters = {};
 
-  // ربط الأزرار بطريقة سليمة ومضمونة
   document.getElementById('enterAppBtn').addEventListener('click', function() {
     document.getElementById('splash-screen').classList.add('hidden');
   });
