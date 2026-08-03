@@ -149,36 +149,127 @@
   }
   .enter-btn:active { transform: scale(0.96); }
 
-  /* ── 2. الهيدر والمحتوى الرئيسي ── */
+  /* ── 2. الهيدر الاحترافي المتطور ── */
   .app-header {
-    background: linear-gradient(135deg, #1e1b4b 0%, #312e81 100%);
+    background: linear-gradient(135deg, #0f172a 1e1b4b 0%, #312e81 100%);
     color: #fff;
-    padding: 22px 20px;
+    padding: 16px 20px;
     display: flex;
     align-items: center;
     justify-content: space-between;
-    box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+    box-shadow: 0 12px 30px rgba(0,0,0,0.25);
     z-index: 10;
-    border-bottom: 1px solid rgba(255,255,255,0.08);
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+    position: relative;
+    overflow: hidden;
   }
-  .app-header h1 { font-size: 1.4rem; font-weight: 800; letter-spacing: 0.5px; }
-  .app-header p { font-size: 0.8rem; color: #cbd5e1; margin-top: 2px; }
+  
+  /* خلفية لامعة متحركة خفيفة داخل الهيدر */
+  .app-header::after {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(247, 37, 133, 0.15) 0%, transparent 60%);
+    pointer-events: none;
+  }
+
+  .header-left-group {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    z-index: 2;
+  }
+
+  /* أيقونة الشعار الاحترافية مع حلقة ضوئية نبضية */
+  .header-brand-icon {
+    width: 46px;
+    height: 46px;
+    background: linear-gradient(135deg, #4361ee, #f72585);
+    border-radius: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.4rem;
+    box-shadow: 0 6px 15px rgba(247, 37, 133, 0.4);
+    position: relative;
+  }
+  .header-brand-icon::before {
+    content: '';
+    position: absolute;
+    inset: -3px;
+    border-radius: 16px;
+    border: 1px solid rgba(255,255,255,0.3);
+    animation: headerPulse 2s infinite;
+  }
+  @keyframes headerPulse {
+    0% { transform: scale(1); opacity: 1; }
+    100% { transform: scale(1.15); opacity: 0; }
+  }
+
+  .header-text-box h1 {
+    font-size: 1.25rem;
+    font-weight: 800;
+    letter-spacing: 0.5px;
+    background: linear-gradient(135deg, #fff 40%, #f72585 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  .header-text-box p {
+    font-size: 0.75rem;
+    color: #cbd5e1;
+    margin-top: 1px;
+    font-weight: 600;
+    letter-spacing: 0.3px;
+  }
+
+  /* مجموعة الأزرار التفاعلية اليمينية في الهيدر */
+  .header-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    z-index: 2;
+  }
+
+  .header-pill-btn {
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    color: #fff;
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    transition: all 0.2s ease;
+    backdrop-filter: blur(5px);
+  }
+  .header-pill-btn:hover {
+    background: rgba(255, 255, 255, 0.2);
+    border-color: rgba(255, 255, 255, 0.3);
+    transform: translateY(-1px);
+  }
+  .header-pill-btn:active { transform: scale(0.95); }
 
   .back-btn {
-    background: rgba(255,255,255,0.1);
-    border: 1px solid rgba(255,255,255,0.15);
+    background: rgba(247, 37, 133, 0.2);
+    border: 1px solid rgba(247, 37, 133, 0.4);
     color: #fff;
-    width: 42px;
-    height: 42px;
+    width: 40px;
+    height: 40px;
     border-radius: 50%;
-    font-size: 1.1rem;
+    font-size: 1rem;
     cursor: pointer;
     display: none;
     align-items: center;
     justify-content: center;
     transition: all 0.2s;
   }
-  .back-btn:hover { background: rgba(255,255,255,0.2); transform: scale(1.05); }
+  .back-btn:hover { background: rgba(247, 37, 133, 0.4); transform: scale(1.05); }
 
   .main-content {
     flex: 1;
@@ -423,13 +514,21 @@
       <button class="enter-btn" id="enterAppBtn">ابدأ الورد ✨</button>
     </div>
 
-    <!-- الهيدر العلوي -->
+    <!-- الهيدر الاحترافي الجديد كلياً -->
     <div class="app-header">
-      <div>
-        <h1 id="headerTitle">حصن المسلم</h1>
-        <p id="headerSub">أذكار من صحيح السنة النبوية</p>
+      <div class="header-left-group">
+        <div class="header-brand-icon">📿</div>
+        <div class="header-text-box">
+          <h1 id="headerTitle">حصن المسلم</h1>
+          <p id="headerSub">أذكار من صحيح السنة النبوية</p>
+        </div>
       </div>
-      <button class="back-btn" id="backBtn">✕</button>
+      <div class="header-actions">
+        <button class="header-pill-btn" onclick="alert('تطبيق ريان للأذكار والسبح الإلكترونية - النسخة الاحترافية المتكاملة.')">
+          <span>✨</span> مزايا
+        </button>
+        <button class="back-btn" id="backBtn" title="العودة">✕</button>
+      </div>
     </div>
 
     <!-- محتوى التطبيق والأقسام -->
@@ -698,7 +797,6 @@
       // انتهى الذكر الحالي، انتقل للذكر التالي تلقائياً
       currentIndex++;
       if (currentIndex >= data.items.length) {
-        // العودة للرئيسية أو إعادة الورد عند انتهائه بالكامل
         alert('تقبل الله طاعتكم! لقد أتممت أذكار هذا القسم بنجاح.');
         goHome();
         return;
