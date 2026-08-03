@@ -6,272 +6,421 @@
 <title>تطبيق ريان - الأذكار الشاملة</title>
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
 <style>
-  * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Cairo', sans-serif; }
+  * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Cairo', sans-serif; -webkit-tap-highlight-color: transparent; }
   
+  :root {
+    --primary: #4361ee;
+    --secondary: #3a0ca3;
+    --accent: #f72585;
+    --success: #4cc9f0;
+    --bg-dark: #0f172a;
+  }
+
   body {
-    background: #03045e;
-    color: #333;
+    background: #070b19;
+    color: #1e293b;
     min-height: 100vh;
     display: flex;
     justify-content: center;
     align-items: center;
+    overflow: hidden;
+  }
+
+  /* خلفية متحركة تفاعلية */
+  .bg-glow {
+    position: absolute;
+    width: 300px;
+    height: 300px;
+    background: linear-gradient(135deg, #4361ee, #f72585);
+    filter: blur(80px);
+    border-radius: 50%;
+    z-index: 0;
+    opacity: 0.4;
+    animation: floatGlow 8s infinite alternate ease-in-out;
+  }
+  @keyframes floatGlow {
+    0% { transform: translate(-50px, -50px) scale(1); }
+    100% { transform: translate(50px, 50px) scale(1.2); }
   }
 
   .phone-frame {
     width: 100%;
-    max-width: 450px;
+    max-width: 440px;
     height: 100vh;
-    max-height: 900px;
-    background: #f4f8fb;
+    max-height: 880px;
+    background: #f8fafc;
     display: flex;
     flex-direction: column;
     position: relative;
     overflow: hidden;
-    box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+    box-shadow: 0 25px 50px -12px rgba(0,0,0,0.7), 0 0 0 1px rgba(255,255,255,0.1);
+    z-index: 1;
   }
-  @media(min-width: 451px) {
-    .phone-frame { border-radius: 35px; border: 8px solid #023e8a; }
+  @media(min-width: 441px) {
+    .phone-frame { border-radius: 40px; }
   }
 
-  /* ── 1. الشاشة الافتتاحية ── */
+  /* ── 1. الشاشة الافتتاحية الساحرة ── */
   #splash-screen {
     position: absolute;
     inset: 0;
-    background: linear-gradient(135deg, #0077b6 0%, #03045e 100%);
+    background: radial-gradient(circle at center, #1e1b4b 0%, #09090b 100%);
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
     z-index: 1000;
-    transition: opacity 0.6s ease, visibility 0.6s ease;
-    padding: 20px;
+    transition: opacity 0.7s cubic-bezier(0.4, 0, 0.2, 1), transform 0.7s cubic-bezier(0.4, 0, 0.2, 1);
+    padding: 30px;
     text-align: center;
   }
   #splash-screen.hidden {
     opacity: 0;
+    transform: scale(1.1);
     visibility: hidden;
     pointer-events: none;
   }
 
-  .splash-icon {
-    width: 100px;
-    height: 100px;
-    background: rgba(255, 255, 255, 0.1);
-    border: 2px solid rgba(255, 255, 255, 0.3);
-    border-radius: 50%;
+  .splash-logo-box {
+    position: relative;
+    width: 120px;
+    height: 120px;
+    margin-bottom: 25px;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 3rem;
-    margin-bottom: 20px;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-    animation: pulseGlow 2s infinite alternate;
   }
-  @keyframes pulseGlow {
-    0% { transform: scale(1); box-shadow: 0 0 15px rgba(0,180,216,0.3); }
-    100% { transform: scale(1.08); box-shadow: 0 0 25px rgba(0,180,216,0.6); }
+  .splash-ring {
+    position: absolute;
+    inset: 0;
+    border: 3px dashed rgba(247, 37, 133, 0.6);
+    border-radius: 50%;
+    animation: rotateRing 15s linear infinite;
+  }
+  @keyframes rotateRing {
+    100% { transform: rotate(360deg); }
+  }
+  .splash-icon {
+    font-size: 3.5rem;
+    animation: bounceIcon 2s infinite alternate ease-in-out;
+  }
+  @keyframes bounceIcon {
+    0% { transform: translateY(0) scale(1); }
+    100% { transform: translateY(-8px) scale(1.05); }
   }
 
   .splash-title {
-    font-size: 3.2rem;
+    font-size: 3.5rem;
     color: #fff;
     font-weight: 900;
-    letter-spacing: 1px;
-    margin-bottom: 5px;
+    letter-spacing: 2px;
+    background: linear-gradient(135deg, #fff 30%, #f72585 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: 8px;
+    animation: fadeInDown 0.8s ease;
   }
   
   .splash-subtitle-custom {
-    font-size: 1rem;
-    color: #90e0ef;
+    font-size: 1.05rem;
+    color: #94a3b8;
     font-weight: 600;
-    margin-bottom: 25px;
-    letter-spacing: 0.5px;
+    margin-bottom: 35px;
+    letter-spacing: 1px;
   }
 
   .enter-btn {
-    background: #00b4d8;
+    background: linear-gradient(135deg, #4361ee 0%, #f72585 100%);
     color: #fff;
     border: none;
-    padding: 14px 45px;
-    border-radius: 30px;
-    font-size: 1.2rem;
+    padding: 16px 50px;
+    border-radius: 35px;
+    font-size: 1.25rem;
     font-weight: 700;
     cursor: pointer;
-    box-shadow: 0 5px 20px rgba(0,180,216,0.4);
-    transition: transform 0.2s, background 0.2s;
+    box-shadow: 0 10px 30px rgba(247, 37, 133, 0.4);
+    transition: transform 0.2s, box-shadow 0.2s;
+    position: relative;
+    overflow: hidden;
   }
-  .enter-btn:hover { background: #0096c7; }
-  .enter-btn:active { transform: scale(0.95); }
+  .enter-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 15px 35px rgba(247, 37, 133, 0.6);
+  }
+  .enter-btn:active { transform: scale(0.96); }
 
-  /* ── 2. الهيدر والمحتوى ── */
+  /* ── 2. الهيدر والمحتوى الرئيسي ── */
   .app-header {
-    background: linear-gradient(135deg, #0077b6, #03045e);
+    background: linear-gradient(135deg, #1e1b4b 0%, #312e81 100%);
     color: #fff;
-    padding: 20px;
+    padding: 22px 20px;
     display: flex;
     align-items: center;
     justify-content: space-between;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    box-shadow: 0 10px 25px rgba(0,0,0,0.15);
     z-index: 10;
+    border-bottom: 1px solid rgba(255,255,255,0.08);
   }
-  .app-header h1 { font-size: 1.35rem; font-weight: 700; }
-  .app-header p { font-size: 0.75rem; color: #ade8f4; }
+  .app-header h1 { font-size: 1.4rem; font-weight: 800; letter-spacing: 0.5px; }
+  .app-header p { font-size: 0.8rem; color: #cbd5e1; margin-top: 2px; }
 
   .back-btn {
-    background: rgba(255,255,255,0.15);
-    border: none;
+    background: rgba(255,255,255,0.1);
+    border: 1px solid rgba(255,255,255,0.15);
     color: #fff;
-    width: 38px;
-    height: 38px;
+    width: 42px;
+    height: 42px;
     border-radius: 50%;
     font-size: 1.1rem;
     cursor: pointer;
     display: none;
     align-items: center;
     justify-content: center;
-    transition: background 0.2s;
+    transition: all 0.2s;
   }
-  .back-btn:hover { background: rgba(255,255,255,0.25); }
+  .back-btn:hover { background: rgba(255,255,255,0.2); transform: scale(1.05); }
 
   .main-content {
     flex: 1;
     overflow-y: auto;
-    padding: 15px;
+    padding: 18px;
+    background: #f1f5f9;
   }
 
+  /* شبكة الأقسام المتطورة */
   .grid-menu {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
-    gap: 12px;
+    gap: 14px;
     padding-bottom: 10px;
+    animation: fadeIn 0.4s ease;
   }
 
   .grid-item {
     background: #ffffff;
-    border-radius: 16px;
-    padding: 18px 12px;
+    border-radius: 20px;
+    padding: 22px 14px;
     text-align: center;
     cursor: pointer;
-    box-shadow: 0 4px 12px rgba(0,118,182,0.06);
-    border: 1px solid #e0f2fe;
-    transition: all 0.25s ease;
+    box-shadow: 0 10px 25px -5px rgba(0,0,0,0.05), 0 8px 10px -6px rgba(0,0,0,0.05);
+    border: 1px solid rgba(226, 232, 240, 0.8);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    min-height: 120px;
+    min-height: 135px;
+    position: relative;
+    overflow: hidden;
+  }
+  .grid-item::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, rgba(67, 97, 238, 0.05), rgba(247, 37, 133, 0.05));
+    opacity: 0;
+    transition: opacity 0.3s;
   }
   .grid-item:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 8px 20px rgba(0,118,182,0.12);
-    border-color: #00b4d8;
+    transform: translateY(-5px);
+    box-shadow: 0 20px 35px -10px rgba(67, 97, 238, 0.2);
+    border-color: #4361ee;
   }
+  .grid-item:hover::before { opacity: 1; }
   .grid-item:active { transform: scale(0.96); }
-  .grid-item .icon { font-size: 2.3rem; margin-bottom: 8px; }
-  .grid-item .title { font-size: 0.95rem; font-weight: 700; color: #1e293b; }
+  
+  .grid-item .icon {
+    font-size: 2.6rem;
+    margin-bottom: 10px;
+    transition: transform 0.3s;
+  }
+  .grid-item:hover .icon { transform: scale(1.12); }
+  .grid-item .title { font-size: 1.05rem; font-weight: 700; color: #0f172a; }
 
-  /* تذييل الصفحة باللغة الإنجليزية في الأسفل */
+  /* تذييل الصفحة باللغة الإنجليزية */
   .app-footer-credit {
     text-align: center;
     font-size: 0.75rem;
-    color: #94a3b8;
-    padding: 10px 0 5px 0;
+    color: #64748b;
+    padding: 15px 0 5px 0;
     font-family: sans-serif;
     letter-spacing: 0.5px;
+    font-weight: 600;
   }
 
-  /* ── 3. عرض الأذكار الداخلية والزر الكبير المميز ── */
+  /* ── 3. واجهة التفاعل المذهلة مع الذكر الفردي الكبير ── */
   .section-view {
     display: none;
     flex-direction: column;
-    gap: 16px;
-    padding-bottom: 40px;
+    height: 100%;
+    animation: fadeIn 0.4s ease;
   }
   .section-view.active { display: flex; }
 
-  .thikr-card {
-    background: #ffffff;
-    border-radius: 16px;
-    padding: 20px;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.04);
-    border: 1px solid #e2e8f0;
-    border-right: 5px solid #0077b6;
-    transition: all 0.3s ease;
+  .active-thikr-container {
+    flex: 1;
     display: flex;
     flex-direction: column;
-    gap: 12px;
-  }
-  .thikr-card.completed {
-    opacity: 0.55;
-    background: #f8fafc;
-    border-right-color: #cbd5e1;
-  }
-  .thikr-text {
-    font-size: 1.15rem;
-    line-height: 1.95;
-    color: #0f172a;
-    text-align: right;
-  }
-  .thikr-info {
-    display: flex;
     justify-content: space-between;
-    align-items: center;
-    font-size: 0.8rem;
-    color: #64748b;
-    border-top: 1px solid #f1f5f9;
-    padding-top: 8px;
+    background: #ffffff;
+    border-radius: 24px;
+    padding: 24px;
+    box-shadow: 0 15px 35px rgba(0,0,0,0.06);
+    border: 1px solid #e2e8f0;
+    position: relative;
+    overflow: hidden;
   }
 
-  .big-counter-box {
+  /* مؤشر التقدم العلوي للأذكار */
+  .progress-bar-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 15px;
+  }
+  .progress-track {
+    flex: 1;
+    height: 8px;
+    background: #e2e8f0;
+    border-radius: 4px;
+    overflow: hidden;
+  }
+  .progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #4361ee, #f72585);
+    width: 0%;
+    transition: width 0.4s ease;
+    border-radius: 4px;
+  }
+  .progress-text {
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: #64748b;
+  }
+
+  .thikr-content-box {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 10px 0;
+  }
+
+  .thikr-main-text {
+    font-size: 1.35rem;
+    line-height: 2.1;
+    color: #0f172a;
+    font-weight: 700;
+    margin-bottom: 20px;
+    transition: all 0.3s ease;
+  }
+
+  .thikr-virtue-badge {
+    background: #eff6ff;
+    color: #1d4ed8;
+    padding: 8px 16px;
+    border-radius: 30px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    border: 1px solid #dbeafe;
+    max-width: 100%;
+    word-break: break-word;
+  }
+
+  /* زر السبحة العملاق الجذاب في الأسفل */
+  .giant-sebha-wrapper {
     display: flex;
     flex-direction: column;
     align-items: center;
-    margin-top: 5px;
-  }
-  .big-sebha-btn {
     width: 100%;
-    background: linear-gradient(135deg, #0077b6 0%, #00b4d8 100%);
+    margin-top: 15px;
+  }
+
+  .giant-sebha-btn {
+    width: 100%;
+    min-height: 110px;
+    background: linear-gradient(135deg, #4361ee 0%, #3a0ca3 100%);
     color: #fff;
     border: none;
-    padding: 14px;
-    border-radius: 14px;
+    border-radius: 22px;
     font-family: 'Cairo', sans-serif;
-    font-size: 1.1rem;
-    font-weight: 700;
     cursor: pointer;
-    box-shadow: 0 6px 18px rgba(0,119,182,0.3);
+    box-shadow: 0 12px 30px rgba(67, 97, 238, 0.4);
     display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
-    gap: 10px;
-    transition: transform 0.1s ease, background 0.2s ease;
+    gap: 6px;
+    transition: transform 0.1s ease, background 0.3s ease, box-shadow 0.2s;
+    position: relative;
+    overflow: hidden;
   }
-  .big-sebha-btn:active {
-    transform: scale(0.97);
+  .giant-sebha-btn::after {
+    content: '';
+    position: absolute;
+    top: -50%; left: -50%; width: 200%; height: 200%;
+    background: radial-gradient(circle, rgba(255,255,255,0.2) 0%, transparent 70%);
+    opacity: 0;
+    transition: opacity 0.3s;
   }
-  .big-sebha-btn.done {
-    background: linear-gradient(135deg, #cbd5e1 0%, #e2e8f0 100%);
-    color: #475569;
-    box-shadow: none;
+  .giant-sebha-btn:active {
+    transform: scale(0.96);
   }
-  .count-badge {
-    background: rgba(255, 255, 255, 0.25);
-    padding: 2px 12px;
-    border-radius: 20px;
-    font-size: 1rem;
+  .giant-sebha-btn:active::after { opacity: 1; }
+
+  .giant-sebha-btn.completed-state {
+    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+    box-shadow: 0 12px 30px rgba(16, 185, 129, 0.4);
+  }
+
+  .sebha-label-top {
+    font-size: 1.1rem;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .sebha-number-large {
+    font-size: 2.2rem;
+    font-weight: 900;
+    background: rgba(255, 255, 255, 0.2);
+    padding: 0 24px;
+    border-radius: 16px;
+    line-height: 1.3;
+  }
+
+  /* تأثيرات النبض والاهتزاز عند الضغط */
+  @keyframes pulseEffect {
+    0% { transform: scale(1); }
+    50% { transform: scale(0.97); }
+    100% { transform: scale(1); }
+  }
+  .pulse-anim { animation: pulseEffect 0.2s ease; }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
   }
 </style>
 </head>
 <body>
 
+  <div class="bg-glow"></div>
+
   <div class="phone-frame">
     
-    <!-- الشاشة الافتتاحية -->
+    <!-- الشاشة الافتتاحية الساحرة -->
     <div id="splash-screen">
-      <div class="splash-icon">📖</div>
+      <div class="splash-logo-box">
+        <div class="splash-ring"></div>
+        <div class="splash-icon">📿</div>
+      </div>
       <div class="splash-title">ريـان</div>
-      <div class="splash-subtitle-custom">طاعه لمولاك وراحة بدنياك</div>
-      <button class="enter-btn" id="enterAppBtn">دخول التطبيق ✨</button>
+      <div class="splash-subtitle-custom">طاعة لمولاك وراحة بدنياك</div>
+      <button class="enter-btn" id="enterAppBtn">ابدأ الورد ✨</button>
     </div>
 
     <!-- الهيدر العلوي -->
@@ -280,7 +429,7 @@
         <h1 id="headerTitle">حصن المسلم</h1>
         <p id="headerSub">أذكار من صحيح السنة النبوية</p>
       </div>
-      <button class="back-btn" id="backBtn">⬅</button>
+      <button class="back-btn" id="backBtn">✕</button>
     </div>
 
     <!-- محتوى التطبيق والأقسام -->
@@ -336,9 +485,33 @@
         </div>
       </div>
 
-      <!-- عرض الأذكار والزر الكبير -->
+      <!-- عرض الذكر الفردي الكبير والسبحة التفاعلية -->
       <div class="section-view" id="sectionView">
-        <div id="athkarListContainer"></div>
+        <div class="active-thikr-container">
+          
+          <!-- شريط التقدم -->
+          <div class="progress-bar-wrapper">
+            <div class="progress-track">
+              <div class="progress-fill" id="progressFill"></div>
+            </div>
+            <span class="progress-text" id="progressText">1 / 1</span>
+          </div>
+
+          <!-- محتوى الذكر الحالي -->
+          <div class="thikr-content-box">
+            <div class="thikr-main-text" id="thikrTextDisplay">جاري التحميل...</div>
+            <div class="thikr-virtue-badge" id="thikrVirtueDisplay">فضل الذكر</div>
+          </div>
+
+          <!-- زر السبحة العملاق المتنقل للذكر التالي تلقائياً -->
+          <div class="giant-sebha-wrapper">
+            <button class="giant-sebha-btn" id="giantSebhaBtn" onclick="handleSebhaClick()">
+              <span class="sebha-label-top" id="sebhaLabelText">📿 اضغط للعد والسباحة</span>
+              <span class="sebha-number-large" id="sebhaCountDisplay">0</span>
+            </button>
+          </div>
+
+        </div>
       </div>
 
       <!-- التوقيع بالإنجليزية في أسفل الصفحة -->
@@ -354,24 +527,14 @@
       items: [
         { text: "أَمْسَيْنَا وَأَمْسَى المُلْكُ لِلَّهِ، وَالحَمْدُ لِلَّهِ، لَا إِلَهَ إِلَّا اللَّهُ، وَحْدَهُ لَا شَرِيكَ لَهُ.", count: 1, virtue: "رواه مسلم" },
         { text: "اللَّهُمَّ بِكَ أَصْبَحْنَا، وَبِكَ أَمْسَيْنَا، وَبِكَ نَحْيَا، وَبِكَ نَمُوتُ، وَإِلَيْكَ النُّشُورُ.", count: 1, virtue: "رواه الترمذي" },
-        { text: "اللَّهُمَّ أَنْتَ رَبِّي لَا إِلَهَ إِلَّا أَنْتَ، خَلَقْتَنِي وَأَنَا عَبْدُكَ، وَأَنَا عَلَى عَهْدِكَ وَوَعْدِكَ مَا اسْتَطَعْتُ، أَعُوذُ بِكَ مِنْ شَرِّ مَا صَنَعْتُ، أَبُوءُ لَكَ بِنِعْمَتِكَ عَلَيَّ، وَأَبُوءُ لَكَ بِذَنْبِي فَاغْفِرْ لِي فَإِنَّهُ لَا يَغْفِرُ الذُّنُوبَ إِلَّا أَنْتَ.", count: 1, virtue: "سيد الاستغفار (من قالها موقناً بها ومات دخل الجنة)" },
+        { text: "اللَّهُمَّ أَنْتَ رَبِّي لَا إِلَهَ إِلَّا أَنْتَ، خَلَقْتَنِي وَأَنَا عَبْدُكَ، وَأَنَا عَلَى عَهْدِكَ وَوَعْدِكَ مَا اسْتَطَعْتُ، أَعُوذُ بِكَ مِنْ شَرِّ مَا صَنَعْتُ، أَبُوءُ لَكَ بِنِعْمَتِكَ عَلَيَّ، وَأَبُوءُ لَكَ بِذَنْبِي فَاغْفِرْ لِي فَإِنَّهُ لَا يَغْفِرُ الذُّنُوبَ إِلَّا أَنْتَ.", count: 1, virtue: "سيد الاستغفار" },
         { text: "اللَّهُمَّ عَافِنِي فِي بَدَنِي، اللَّهُمَّ عَافِنِي فِي سَمْعِي، اللَّهُمَّ عَافِنِي فِي بَصَرِي، لَا إِلَهَ إِلَّا أَنْتَ (ثلاث مرات).", count: 3, virtue: "أذكار العافية" },
         { text: "اللَّهُمَّ إِنِّى أَعُوذُ بِكَ مِنَ الكُفْرِ وَالفَقْرِ، وَأَعُوذُ بِكَ مِنْ عَذَابِ القَبْرِ، لَا إِلَهَ إِلَّا أَنْتَ (ثلاث مرات).", count: 3, virtue: "الاستعاذة من الكفر والفقر" },
-        { text: "حَسْبِيَ اللَّهُ لَا إِلَهَ إِلَّا هُوَ عَلَيْهِ تَوَكَّلْتُ وَهُوَ رَبُّ العَرْشِ العَظِيمِ (سبع مرات).", count: 7, virtue: "كفاه الله ما أهمه من أمر الدنيا والآخرة" },
-        { text: "اللَّهُمَّ إِنِّى أَسْأَلُكَ العَفْوَ وَالعَافِيَةَ فِي الدُّنْيَا وَالآخِرَةِ...", count: 1, virtue: "طلب العافية في الدين والدنيا" },
-        { text: "اللَّهُمَّ عَالِمَ الغَيْبِ وَالشَّهَادَةِ فَاطِرَ السَّمَاوَاتِ وَالأَرْضِ، رَبَّ كُلِّ شَيْءٍ وَمَلِيكَهُ، أَشْهَدُ أَنْ لَا إِلَهَ إِلَّا أَنْتَ، أَعُوذُ بِكَ مِنْ شَرِّ نَفْسِي وَمِنْ شَرِّ الشَّيْطَانِ وَشِرْكِهِ، وَأَنْ أَقْتَرِفَ عَلَى نَفْسِي سُوءاً أَوْ أَجُرَّهُ إِلَى مُسْلِمٍ.", count: 1, virtue: "حفظ من شر النفس والشيطان" },
+        { text: "حَسْبِيَ اللَّهُ لَا إِلَهَ إِلَّا هُوَ عَلَيْهِ تَوَكَّلْتُ وَهُوَ رَبُّ العَرْشِ العَظِيمِ (سبع مرات).", count: 7, virtue: "كفاه الله ما أهمه" },
         { text: "بِسْمِ اللَّهِ الَّذِي لَا يَضُرُّ مَعَ اسْمِهِ شَيْءٌ فِي الأَرْضِ وَلَا فِي السَّمَاءِ وَهُوَ السَّمِيعُ العَلِيمُ (ثلاث مرات).", count: 3, virtue: "لم يضره شيء حتى يصبح" },
-        { text: "رَضِيتُ بِاللَّهِ رَبّاً، وَبِالْإِسْلَامِ دِيناً، وَبِمُحَمَّدٍ صَلَّى اللَّهُ عَلَيْهِ وَسَلَّمَ نَبِيّاً (ثلاث مرات).", count: 3, virtue: "كان حقاً على الله أن يرضيه يوم القيامة" },
-        { text: "يَا حَيُّ يَا قَيُّومُ، بِرَحْمَتِكَ أَسْتَغِيثُ، أَصْلِحْ لي شَأْنِي كُلَّهُ، وَلَا تَكِلْنِي إِلَى نَفْسِي طَرْفَةَ عَيْنٍ.", count: 1, virtue: "دعاء الاستغاثة وإصلاح الحال" },
-        { text: "أَصْبَحْنَا وَأَصْبَحَ المُلْكُ لِلَّهِ رَبِّ العَالَمِينَ، اللَّهُمَّ إِنِّى أَسْأَلُكَ خَيْرَ هَذَا اليَوْمِ: فَتْحَهُ، وَنَصْرَهُ، وَنُورَهُ، وَبَرَكَتَهُ، وَهُدَاهُ، وَأَعُوذُ بِكَ مِنْ شَرِّ مَا فِيهِ وَشَرِّ مَا بَعْدَهُ.", count: 1, virtue: "طلب خيري اليوم والتعوذ من شره" },
-        { text: "أَصْبَحْنَا عَلَى فِطْرَةِ الإِسْلَامِ، وَعَلَى كَلِمَةِ الإِخْلَاصِ، وَعَلَى دِينِ نَبِيِّنَا مُحَمَّدٍ صَلَّى اللَّهُ عَلَيْهِ وَسَلَّمَ، وَعَلَى مِلَّةِ أَبِينَا إِبْرَاهِيمَ حَنِيفاً مُسْلِماً وَمَا كَانَ مِنَ المُشْرِكِينَ.", count: 1, virtue: "البقاء على الفطرة والسنة" },
-        { text: "سُبْحَانَ اللَّهِ وَبِحَمْدِهِ (مائة مرة).", count: 100, virtue: "لم يأت أحد يوم القيامة بأفضل مما جاء به إلا من قال مثل ما قال أو زاد عليه" },
-        { text: "لَا إِلَهَ إِلَّا اللَّهُ وَحْدَهُ لَا شَرِيكَ لَهُ، لَهُ المُلْكُ وَلَهُ الحَمْدُ وَهُوَ عَلَى كُلِّ شَيْءٍ قَدِيرٌ (عشْر مرات أو مرة واحدة أو مائة مرة).", count: 10, virtue: "عدل عتق رقاب، وعشر حسنات" },
-        { text: "سُبْحَانَ اللَّهِ وَبِحَمْدِهِ: عَدَدَ خَلْقِهِ، وَرِضَا نَفْسِهِ، وَزِنَةَ عَرْشِهِ، وَمِدَادَ كَلِمَاتِهِ (ثلاث مرات).", count: 3, virtue: "أجر عظيم مضاعف" },
-        { text: "اللَّهُمَّ إِنِّى أَسْأَلُكَ عِلْماً نَافِعاً، وَرِزْقاً طَيِّباً، وَعَمَلاً مُتَقَبَّلاً.", count: 1, virtue: "دعاء الصباح للرزق والعلم" },
-        { text: "أَسْتَغْفِرُ اللَّهَ وَأَتُوبُ إِلَيْهِ (مائة مرة في اليوم).", count: 100, virtue: "التوبة والغفران" },
-        { text: "أَعُوذُ بِكَلِمَاتِ اللَّهِ التَّامَّاتِ مِنْ شَرِّ مَا خَلَقَ (ثلاث مرات إذا أتم).", count: 3, virtue: "الوقاية من الآفات" },
-        { text: "اللَّهُمَّ صَلِّ وَسَلَّمْ عَلَى نَبِيِّنَا مُحَمَّدٍ (عشراً).", count: 10, virtue: "أدركته شفاعة النبي يوم القيامة" }
+        { text: "رَضِيتُ بِاللَّهِ رَبّاً، وَبِالْإِسْلَامِ دِيناً، وَبِمُحَمَّدٍ صَلَّى اللَّهُ عَلَيْهِ وَسَلَّمَ نَبِيّاً (ثلاث مرات).", count: 3, virtue: "كان حقاً على الله أن يرضيه" },
+        { text: "يَا حَيُّ يَا قَيُّومُ، بِرَحْمَتِكَ أَسْتَغِيثُ، أَصْلِحْ لي شَأْنِي كُلَّهُ، وَلَا تَكِلْنِي إِلَى نَفْسِي طَرْفَةَ عَيْنٍ.", count: 1, virtue: "دعاء الاستغاثة" },
+        { text: "سُبْحَانَ اللَّهِ وَبِحَمْدِهِ (مائة مرة).", count: 100, virtue: "أفضل ما جاء به الناس يوم القيامة" }
       ]
     },
     evening: {
@@ -379,123 +542,96 @@
       items: [
         { text: "أَمْسَيْنَا وَأَمْسَى المُلْكُ لِلَّهِ، وَالحَمْدُ لِلَّهِ، لَا إِلَهَ إِلَّا اللَّهُ، وَحْدَهُ لَا شَرِيكَ لَهُ.", count: 1, virtue: "رواه مسلم" },
         { text: "اللَّهُمَّ بِكَ أَمْسَيْنَا، وَبِكَ أَصْبَحْنَا، وَبِكَ نَحْيَا، وَبِكَ نَمُوتُ، وَإِلَيْكَ المَصِيرُ.", count: 1, virtue: "رواه الترمذي" },
-        { text: "اللَّهُمَّ أَنْتَ رَبِّي لَا إِلَهَ إِلَّا أَنْتَ، خَلَقْتَنِي وَأَنَا عَبْدُكَ...", count: 1, virtue: "سيد الاستغفار للمساء" },
         { text: "اللَّهُمَّ عَافِنِي فِي بَدَنِي، اللَّهُمَّ عَافِنِي فِي سَمْعِي، اللَّهُمَّ عَافِنِي فِي بَصَرِي (ثلاث مرات).", count: 3, virtue: "العافية" },
-        { text: "اللَّهُمَّ إِنِّى أَعُوذُ بِكَ مِنَ الكُفْرِ وَالفَقْرِ، وَأَعُوذُ بِكَ مِنْ عَذَابِ القَبْرِ (ثلاث مرات).", count: 3, virtue: "الحفظ من الكفر والفقر" },
         { text: "حَسْبِيَ اللَّهُ لَا إِلَهَ إِلَّا هُوَ عَلَيْهِ تَوَكَّلْتُ وَهُوَ رَبُّ العَرْشِ العَظِيمِ (سبع مرات).", count: 7, virtue: "كفاية الهموم" },
-        { text: "اللَّهُمَّ إِنِّى أَسْأَلُكَ العَفْوَ وَالعَافِيَةَ فِي الدُّنْيَا وَالآخِرَةِ...", count: 1, virtue: "العفو والعافية" },
-        { text: "اللَّهُمَّ عَالِمَ الغَيْبِ وَالشَّهَادَةِ فَاطِرَ السَّمَاوَاتِ وَالأَرْضِ...", count: 1, virtue: "حفظ من شر الشيطان" },
-        { text: "بِسْمِ اللَّهِ الَّذِي لَا يَضُرُّ مَعَ اسْمِهِ شَيْءٌ فِي الأَرْضِ وَلَا فِي السَّمَاءِ وَهُوَ السَّمِيعُ العَلِيمُ (ثلاث مرات).", count: 3, virtue: "لم يضره شيء حتى يصبُح" },
+        { text: "بِسْمِ اللَّهِ الَّذِي لَا يَضُرُّ مَعَ اسْمِهِ شَيْءٌ فِي الأَرْضِ وَلَا فِي السَّمَاءِ وَهُوَ السَّمِيعُ العَلِيمُ (ثلاث مرات).", count: 3, virtue: "حفظ المساء" },
         { text: "رَضِيتُ بِاللَّهِ رَبّاً، وَبِالْإِسْلَامِ دِيناً، وَبِمُحَمَّدٍ صَلَّى اللَّهُ عَلَيْهِ وَسَلَّمَ نَبِيّاً (ثلاث مرات).", count: 3, virtue: "الرضا" },
-        { text: "يَا حَيُّ يَا قَيُّومُ، بِرَحْمَتِكَ أَسْتَغِيثُ، أَصْلِحْ لي شَأْنِي كُلَّهُ، وَلَا تَكِلْنِي إِلَى نَفْسِي طَرْفَةَ عَيْنٍ.", count: 1, virtue: "الاستغاثة" },
-        { text: "أَمْسَيْنَا وَأَمْسَى المُلْكُ لِلَّهِ رَبِّ العَالَمِينَ، اللَّهُمَّ إِنِّى أَسْأَلُكَ خَيْرَ هَذَا اللَيْلَةِ: فَتْحَهَا، وَنَصْرَهَا، وَنُورَهَا، وَبَرَكَتَهَا، وَهُدَاهَا، وَأَعُوذُ بِكَ مِنْ شَرِّ مَا فِيهَا وَشَرِّ مَا بَعْدَهَا.", count: 1, virtue: "خير الليلة" },
-        { text: "أَمْسَيْنَا عَلَى فِطْرَةِ الإِسْلَامِ، وَعَلَى كَلِمَةِ الإِخْلَاصِ، وَعَلَى دِينِ نَبِيِّنَا مُحَمَّدٍ صَلَّى اللَّهُ عَلَيْهِ وَسَلَّمَ، وَعَلَى مِلَّةِ أَبِينَا إِبْرَاهِيمَ حَنِيفاً مُسْلِماً وَمَا كَانَ مِنَ المُشْرِكِينَ.", count: 1, virtue: "الفطرة" },
-        { text: "سُبْحَانَ اللَّهِ وَبِحَمْدِهِ (مائة مرة).", count: 100, virtue: "فضل التسبيح" },
-        { text: "لَا إِلَهَ إِلَّا اللَّهُ وَحْدَهُ لَا شَرِيكَ لَهُ، لَهُ المُلْكُ وَلَهُ الحَمْدُ وَهُوَ عَلَى كُلِّ شَيْءٍ قَدِيرٌ (عشْر مرات).", count: 10, virtue: "الأجر العظيم" },
-        { text: "سُبْحَانَ اللَّهِ وَبِحَمْدِهِ: عَدَدَ خَلْقِهِ، وَرِضَا نَفْسِهِ، وَزِنَةَ عَرْشِهِ، وَمِدَادَ كَلِمَاتِهِ (ثلاث مرات).", count: 3, virtue: "مضاعفة الأجر" },
-        { text: "أَعُوذُ بِكَلِمَاتِ اللَّهِ التَّامَّاتِ مِنْ شَرِّ مَا خَلَقَ (ثلاث مرات).", count: 3, virtue: "حفظ المساء" },
-        { text: "اللَّهُمَّ صَلِّ وَسَلَّمْ عَلَى نَبِيِّنَا مُحَمَّدٍ (عشراً).", count: 10, virtue: "الشفاعة" }
+        { text: "أَعُوذُ بِكَلِمَاتِ اللَّهِ التَّامَّاتِ مِنْ شَرِّ مَا خَلَقَ (ثلاث مرات).", count: 3, virtue: "حفظ المساء من كل شر" }
       ]
     },
     sleep: {
       title: "أذكار النوم",
       items: [
-        { text: "يجمع كفيه ثم ينفث فيهما فيقرأ: (قل هو الله أحد)، و(قل أعوذ برَبِّ الفَلَقِ)، و(قل أعوذ برب الناس)، ثم يمسح بهما ما استطاع من جسده يبدأ بهما على رأسه وجهه وما أقبل من جسده (يفعل ذلك ثلاث مرات).", count: 3, virtue: "الحفظ النبوي الشامل قبل النوم" },
-        { text: "آية الكرسي: (اللَّهُ لَا إِلَهَ إِلَّا هُوَ الْحَيُّ الْقَيُّومُ...) [البقرة: 255].", count: 1, virtue: "لا يزال عليك من الله حافظ ولا يقربك شيطان حتى تصبح" },
-        { text: "خاتمة سورة البقرة: (آمَنَ الرَّسُولُ بِمَا أُنْزِلَ إِلَيْهِ مِنْ رَبِّهِ والمُؤْمِنُونَ...) [البقرة: 285-286].", count: 1, virtue: "من قرأهما في ليلة كفتاه" },
-        { text: "بِاسْمِكَ رَبِّي وَضَعْتُ جَنْبِي، وَبِكَ أَرْفَعُهُ، إِنْ أَمْسَكْتَ نَفْسِي فَارْحَمْهَا، وَإِنْ أَرْسَلْتَهَا فَاحْفَظْهَا بِمَا تحْفَظُ بِه عِبَادَكَ الصَّالِحِينَ.", count: 1, virtue: "دعاء الاستلقاء للنوم" },
-        { text: "اللَّهُمَّ إنَّكَ خَلَقْتَ نَفْسِي وَأَنْتَ تَوَفَّاهَا، لَكَ مَمَاتُهَا وَمَحْيَاهَا، إنْ أَحْيَيْتَهَا فَاحْفَظْهَا، وَإنْ أَمَتَّهَا فَاغْفِرْ لَهَا، اللَّهُمَّ إنِّي أَسْأَلُكَ العَافِيَةَ.", count: 1, virtue: "دعاء توفي النفس وحفظها" },
-        { text: "اللَّهُمَّ قِنِي عَذَابَكَ يَوْمَ تَبْعَثُ عِبَادَكَ (ثلاث مرات).", count: 3, virtue: "الوقاية من العذاب" },
-        { text: "بِاسْمِكَ اللَّهُمَّ أَمُوتُ وَأَحْيَا.", count: 1, virtue: "ذكر المضجع" },
-        { text: "سُبْحَانَ اللَّهِ (33)، وَالحَمْدُ لِلَّهِ (33)، وَاللَّهُ أَكْبَرُ (34) (مجموعها مائة).", count: 1, virtue: "خير لك من خادم" },
-        { text: "اللَّهُمَّ رَبَّ السَّمَاوَاتِ السَّبْعِ وَرَبَّ العَرْشِ العَظِيمِ، رَبَّنَا وَرَبَّ كُلِّ شَيْءٍ، فَالِقَ الحَبِّ وَالنَّوَى، وَمُنْزِلَ التَّوْرَاةِ وَالإِنْجِيلِ وَالفرْقَانِ، أَعُوذُ بِكَ مِنْ شَرِّ كُلِّ شَيْءٍ أَنْتَ آخِذٌ بِنَاصِيَتِهِ، اللَّهُمَّ أَنْتَ الأَوَّلُ فَلَيْسَ قَبْلَكَ شَيْءٌ، وَأَنْتَ الآخِرُ فَلَيْسَ بَعْدَكَ شَيْءٌ، وَأَنْتَ الظَّاهِرُ فَلَيْسَ فَوْقَكَ شَيْءٌ، وَأَنْتَ البَاطِنُ فَلَيْسَ دُونَكَ شَيْءٌ، اقْضِ عَنَّا الدَّيْنَ وَأَغْنِنَا مِنَ الفَقْرِ.", count: 1, virtue: "قضاء الدين والإغناء عن الفقر" },
-        { text: "اللَّهُمَّ أَسْلَمْتُ نَفْسِي إِلَيْكَ، وَفَوَّضْتُ أَمْرِي إِلَيْكَ، وَوَجَّهْتُ وَجْهِي إِلَيْكَ، وَأَلْجَأْتُ ظَهْرِي إِلَيْكَ، رَهْبَةً وَرَغْبَةً إِلَيْكَ، لَا مَلْجَأَ وَلَا مَنْجَا مِنْكَ إِلَّا إِلَيْكَ، آمَنْتُ بِكِتَابِكَ الَّذِي أَنْزَلْتَ وَبِنَبِيِّكَ الَّذِي أَرْسَلْتَ.", count: 1, virtue: "من مات على الفطرة إن قالها" },
-        { text: "قراءة سورة السجدة وسورة الملك.", count: 1, virtue: "منجيات ومنيرات للقبر" }
+        { text: "يجمع كفيه ثم ينفث فيهما فيقرأ: (قل هو الله أحد)، والمعوذتين، ويمسح بهما ما استطاع من جسده (ثلاث مرات).", count: 3, virtue: "الحفظ الشامل قبل النوم" },
+        { text: "آية الكرسي: (اللَّهُ لَا إِلَهَ إِلَّا هُوَ الْحَيُّ الْقَيُّومُ...).", count: 1, virtue: "لا يقربك شيطان حتى تصبح" },
+        { text: "بِاسْمِكَ رَبِّي وَضَعْتُ جَنْبِي، وَبِكَ أَرْفَعُهُ...", count: 1, virtue: "دعاء الاستلقاء" },
+        { text: "سُبْحَانَ اللَّهِ (33)، وَالحَمْدُ لِلَّهِ (33)، وَاللَّهُ أَكْبَرُ (34).", count: 100, virtue: "خير لك من خادم" }
       ]
     },
     wakeup: {
       title: "أذكار الاستيقاظ",
       items: [
-        { text: "الحَمْدُ لِلَّهِ الَّذِي أَحْيَانَا بَعْدَ مَا أَمَاتَنَا وَإِلَيْهِ النُّشُورُ.", count: 1, virtue: "الحمد لله على رد الروح والحياة" },
-        { text: "لَا إِلَهَ إِلَّا اللَّهُ وَحْدَهُ لَا شَرِيكَ لَهُ، لَهُ المُلْكُ وَلَهُ الحَمْدُ، وَهُوَ عَلَى كُلِّ شَيْءٍ قَدِيرٌ، سُبْحَانَ اللَّهِ، وَالحَمْدُ لِلَّهِ، وَلَا إِلَهَ إِلَّا اللَّهُ، وَاللَّهُ أَكْبَرُ، وَلَا حَوْلَ وَلَا قُوَّةَ إِلَّا بِاللَّهِ العَلِيِّ العَظِيمِ، رَبِّ اغْفِرْ لِي (من قالها غُفرت له، فإن دعا استُجيب له، فإن قام فتوضأ وصلى قُبلت صلاته).", count: 1, virtue: "غفران الذنوب وإجابة الدعاء" },
-        { text: "الحَمْدُ لِلَّهِ الَّذِي عَافَانِي فِي جَسَدِي، وَرَدَّ عَلَيَّ رُوحِي، وَأَذِنَ لي بِذِكْرِهِ.", count: 1, virtue: "الشكر على عافية الجسد والروح" },
-        { text: "إنَّ فِي خَلْقِ السَّمَاوَاتِ وَالأَرْضِ... [آيات آل عمران من الآية 190 حتى آخر السورة].", count: 1, virtue: "قراءة خواتم سورة آل عمران عند الاستيقاظ" }
+        { text: "الحَمْدُ لِلَّهِ الَّذِي أَحْيَانَا بَعْدَ مَا أَمَاتَنَا وَإِلَيْهِ النُّشُورُ.", count: 1, virtue: "الحمد لله على رد الحياة" },
+        { text: "لَا إِلَهَ إِلَّا اللَّهُ وَحْدَهُ لَا شَرِيكَ لَهُ، لَهُ المُلْكُ وَلَهُ الحَمْدُ وَهُوَ عَلَى كُلِّ شَيْءٍ قَدِيرٌ...", count: 1, virtue: "غفران الذنوب وإجابة الدعاء" }
       ]
     },
     mosque: {
       title: "أذكار المسجد",
       items: [
-        { text: "الدعاء عند الذهاب إلى المسجد: (اللَّهُمَّ اجْعَلْ فِي قَلْبِي نُوراً، وَفِي لِسَانِي نُوراً، وَفِي سَمْعِي نُوراً...).", count: 1, virtue: "طلب النور الشامل" },
-        { text: "الدخول برجله اليمنى ويقول: (أَعُوذُ بِاللَّهِ العَظِيمِ، وَبِوَجْهِهِ الكَرِيمِ، وَسُلْطَانِهِ القَدِيمِ مِنَ الشَّيْطَانِ الرَّجِيمِ).", count: 1, virtue: "حفظ الشيطان عند دخول المسجد" },
-        { text: "بِسْمِ اللَّهِ، وَالصَّلَاةُ وَالسَّلَامُ عَلَى رَسُولِ اللَّهِ، اللَّهُمَّ افْتَحْ لي أَبْوَابَ رَحْمَتِكَ.", count: 1, virtue: "دخول المسجد بالبسملة والصلاة على النبي" },
-        { text: "الخروج برجله اليسرى ويقول: (بِسْمِ اللَّهِ، وَالصَّلَاةُ وَالسَّلَامُ عَلَى رَسُولِ اللَّهِ، اللَّهُمَّ إِنِّى أَسْأَلُكَ مِنْ فَضْلِكَ، اللَّهُمَّ اعْصِمْنِي مِنَ الشَّيْطَانِ الرَّجِيمِ).", count: 1, virtue: "طلب الفضل والاعتصام من الشيطان عند الخروج" }
+        { text: "أَعُوذُ بِاللَّهِ العَظِيمِ، وَبِوَجْهِهِ الكَرِيمِ، وَسُلْطَانِهِ القَدِيمِ مِنَ الشَّيْطَانِ الرَّجِيمِ.", count: 1, virtue: "عند دخول المسجد" },
+        { text: "اللَّهُمَّ افْتَحْ لي أَبْوَابَ رَحْمَتِكَ.", count: 1, virtue: "دخول المسجد" },
+        { text: "اللَّهُمَّ إِنِّى أَسْأَلُكَ مِنْ فَضْلِكَ.", count: 1, virtue: "عند الخروج من المسجد" }
       ]
     },
     home: {
       title: "أذكار البيت",
       items: [
-        { text: "عند دخول البيت: (بِسْمِ اللَّهِ وَلَجْنَا، وَبِسْمِ اللَّهِ خَرَجْنَا، وَعَلَى رَبِّنَا تَوَكَّلْنَا)، ثم يُسليم على أهله.", count: 1, virtue: "طرد الشيطان وتبريك البيت" },
-        { text: "عند الخروج من البيت: (بِسْمِ اللَّهِ، تَوَكَّلْتُ عَلَى اللَّهِ، وَلَا حَوْلَ وَلَا قُوَّةَ إِلَّا بِاللَّهِ).", count: 1, virtue: "يقال له: هديت وكفيت ووقيت، ويجنب عنه الشيطان" }
+        { text: "بِسْمِ اللَّهِ وَلَجْنَا، وَبِسْمِ اللَّهِ خَرَجْنَا، وَعَلَى رَبِّنَا تَوَكَّلْنَا.", count: 1, virtue: "طرد الشيطان عند الدخول" },
+        { text: "بِسْمِ اللَّهِ، تَوَكَّلْتُ عَلَى اللَّهِ، وَلَا حَوْلَ وَلَا قُوَّةَ إِلَّا بِاللَّهِ.", count: 1, virtue: "عند الخروج من البيت" }
       ]
     },
     food: {
       title: "أذكار الطعام",
       items: [
-        { text: "إذا أكل أحدكم طعاماً فليقل: (بِسْمِ اللَّهِ)، فإن نسي في أوله فليقل: (بِسْمِ اللَّهِ فِي أَوَّلِهِ وَآخِرِهِ).", count: 1, virtue: "منع الشيطان من مشاركة الطعام" },
-        { text: "مَنْ أَطْعَمَهُ اللَّهُ الطَّعَامَ فَلْيَقُلْ: (اللَّهُمَّ بَارِكْ لَنَا فِيهِ وَأَطْعِمْنَا خَيْراً مِنْهُ)، ومَنْ سَقَاهُ اللَّهُ لَبَناً فَلْيَقُلْ: (اللَّهُمَّ بَارِكْ لَنَا فِيهِ وَزِدْنَا مِنْهُ).", count: 1, virtue: "البركة في الطعام والشراب" },
-        { text: "الدعاء عند فراغ الطعام: (الحَمْدُ لِلَّهِ الَّذِي أَطْعَمَنِي هَذَا وَرَزَقَنِيهِ مِنْ غَيْرِ حَوْلٍ مِنِّي وَلَا قُوَّةٍ).", count: 1, virtue: "غفر له ما تقدم من ذنبه" },
-        { text: "الحَمْدُ لِلَّهِ حَمْداً كَثِيراً طَيِّباً مُبَارَكاً فِيهِ، غَيْرَ مَكْفِيٍّ وَلَا مُوَدَّعٍ وَلَا مُسْتَغْنًى عَنْهُ رَبَّنَا.", count: 1, virtue: "ثناء عظيم بعد الطعام" }
+        { text: "بِسْمِ اللَّهِ (وإن نسي في أوله فليقل: بِسْمِ اللَّهِ فِي أَوَّلِهِ وَآخِرِهِ).", count: 1, virtue: "منع الشيطان من الطعام" },
+        { text: "الحَمْدُ لِلَّهِ الَّذِي أَطْعَمَنِي هَذَا وَرَزَقَنِيهِ مِنْ غَيْرِ حَوْلٍ مِنِّي وَلَا قُوَّةٍ.", count: 1, virtue: "مغفرة ما تقدم من الذنب" }
       ]
     },
     salah: {
       title: "أذكار الصلاة",
       items: [
-        { text: "أَسْتَغْفِرُ اللَّهَ (ثلاثاً)، اللَّهُمَّ أَنْتَ السَّلَامُ وَمِنْكَ السَّلَامُ، تَبَارَكْتَ يَا ذَا الجَلَالِ وَالإِكْرَامِ.", count: 1, virtue: "ذكر ما بعد السلام من الصلاة المكتوبة" },
-        { text: "لَا إِلَهَ إِلَّا اللَّهُ وَحْدَهُ لَا شَرِيكَ لَهُ، لَهُ المُلْكُ وَلَهُ الحَمْدُ وَهُوَ عَلَى كُلِّ شَيْءٍ قَدِيرٌ، اللَّهُمَّ لَا مَانِعَ لِمَا أَعْطَيْتَ، وَلَا مُعْطِيَ لِمَا مَنَعْتَ، وَلَا يَنْفَعُ ذَا الجَدِّ مِنْكَ الجَدُّ.", count: 1, virtue: "التهليل والتوحيد بعد الصلاة" },
-        { text: "لَا إِلَهَ إِلَّا اللَّهُ وَحْدَهُ لَا شَرِيكَ لَهُ، لَهُ المُلْكُ وَلَهُ الحَمْدُ وَهُوَ عَلَى كُلِّ شَيْءٍ قَدِيرٌ، لَا حَوْلَ وَلَا قُوَّةَ إِلَّا بِاللَّهِ، لَا إِلَهَ إِلَّا اللَّهُ، وَلَا نَعْبُدُ إِلَّا إِيَّاهُ، لَهُ النِّعْمَةُ وَلَهُ الفَضْلُ وَلَهُ الثَّنَاءُ الحَسَنُ، لَا إِلَهَ إِلَّا اللَّهُ مُخْلِصِينَ لَهُ الدِّينَ وَلَوْ كَرِهَ الكَافِرُونَ.", count: 1, virtue: "فضل الذاكرين بعد الصلاة" },
-        { text: "سُبْحَانَ اللَّهِ (33)، وَالحَمْدُ لِلَّهِ (33)، وَاللَّهُ أَكْبَرُ (34)، وتتمة المائة: (لَا إِلَهَ إِلَّا اللَّهُ وَحْدَهُ لَا شَرِيكَ لَهُ...).", count: 1, virtue: "غفرت خطاياه وإن كانت مثل زبد البحر" },
-        { text: "قراءة آية الكرسي والمعوذات بعد كل صلاة.", count: 1, virtue: "لا يمنعه من دخول الجنة إلا الموت" }
+        { text: "أَسْتَغْفِرُ اللَّهَ (ثلاثاً)، اللَّهُمَّ أَنْتَ السَّلَامُ وَمِنْكَ السَّلَامُ، تَبَارَكْتَ يَا ذَا الجَلَالِ وَالإِكْرَامِ.", count: 1, virtue: "بعد السلام من الصلاة" },
+        { text: "سُبْحَانَ اللَّهِ (33)، وَالحَمْدُ لِلَّهِ (33)، وَاللَّهُ أَكْبَرُ (34).", count: 100, virtue: "غفران الخطايا" }
       ]
     },
     wudu: {
       title: "أذكار الوضوء",
       items: [
-        { text: "بِسْمِ اللَّهِ.", count: 1, virtue: "عند البدء في الوضوء" },
-        { text: "أَشْهَدُ أَنْ لَا إِلَهَ إِلَّا اللَّهُ وَحْدَهُ لَا شَرِيكَ لَهُ، وَأَشْهَدُ أَنَّ مُحَمَّداً عَبْدُهُ وَرَسُولُهُ. اللَّهُمَّ اجْعَلْنِي مِنَ التَّوَّابِينَ وَاجْعَلْنِي مِنَ المُتَطَهِّرِينَ.", count: 1, virtue: "فتحت له أبواب الجنة الثمانية يدخل من أيها شاء" }
+        { text: "بِسْمِ اللَّهِ.", count: 1, virtue: "البداية" },
+        { text: "أَشْهَدُ أَنْ لَا إِلَهَ إِلَّا اللَّهُ وَحْدَهُ لَا شَرِيكَ لَهُ... واجْعَلْنِي مِنَ المُتَطَهِّرِينَ.", count: 1, virtue: "فتحت له أبواب الجنة الثمانية" }
       ]
     },
     travel: {
       title: "أذكار السفر",
       items: [
-        { text: "التكبير ثلاثاً عند ارتقاء شرف أو دابة، ثم يقول: (سُبْحَانَ الَّذِي سَخَّرَ لَنَا هَذَا وَمَا كُنَّا لَهُ مُقْرِنِينَ، وَإِنَّا إِلَى رَبِّنَا لَمُنْقَلِبُونَ).", count: 1, virtue: "تسبيح الركوب والسفر" },
-        { text: "اللَّهُمَّ إِنِّى أَسْأَلُكَ فِي سَفَرِنَا هَذَا البِرَّ وَالتَّقْوَى، وَمِنَ العَمَلِ مَا تَرْضَى...", count: 1, virtue: "دعاء السفر الشامل" },
-        { text: "دعاء الرجوع من السفر: آيِبُونَ تَائِبُونَ عَابِدُونَ لِرَبِّنَا حَامِدُونَ.", count: 1, virtue: "سنة الرجوع والحمد" }
+        { text: "سُبْحَانَ الَّذِي سَخَّرَ لَنَا هَذَا وَمَا كُنَّا لَهُ مُقْرِنِينَ، وَإِنَّا إِلَى رَبِّنَا لَمُنْقَلِبُونَ.", count: 1, virtue: "دعاء الركوب والسفر" },
+        { text: "اللَّهُمَّ هَوِّنْ عَلَيْنَا سَفَرَنَا هَذَا وَاطْوِ عَنَّا بُعْدَهُ.", count: 1, virtue: "تسهيل السفر" }
       ]
     },
     praise: {
       title: "التسبيح والتهليل",
       items: [
-        { text: "سُبْحَانَ اللَّهِ وَبِحَمْدِهِ، سُبْحَانَ اللَّهِ العَظِيمِ.", count: 100, virtue: "خفيفتان على اللسان ثقيلتان في الميزان أحبيتان إلى الرحمن" },
+        { text: "سُبْحَانَ اللَّهِ وَبِحَمْدِهِ، سُبْحَانَ اللَّهِ العَظِيمِ.", count: 100, virtue: "ثقيلتان في الميزان" },
         { text: "لَا حَوْلَ وَلَا قُوَّةَ إِلَّا بِاللَّهِ.", count: 100, virtue: "كنز من كنوز الجنة" },
-        { text: "سُبْحَانَ اللَّهِ، وَالحَمْدُ لِلَّهِ، وَلَا إِلَهَ إِلَّا اللَّهُ، وَاللَّهُ أَكْبَرُ.", count: 100, virtue: "أحب الكلام إلى الله" },
-        { text: "لَا إِلَهَ إِلَّا اللَّهُ وَحْدَهُ لَا شَرِيكَ لَهُ، لَهُ المُلْكُ وَلَهُ الحَمْدُ وَهُوَ عَلَى كُلِّ شَيْءٍ قَدِيرٌ.", count: 100, virtue: "أعدل عتق رقاب وكتبت له مائة حسنة ومحيت عنه مائة سيئة" }
+        { text: "سُبْحَانَ اللَّهِ، وَالحَمْدُ لِلَّهِ، وَلَا إِلَهَ إِلَّا اللَّهُ، وَاللَّهُ أَكْبَرُ.", count: 100, virtue: "أحب الكلام إلى الله" }
       ]
     },
     ruqyah: {
       title: "الرقية الشرعية",
       items: [
-        { text: "أَعُوذُ بِاللَّهِ السَّمِيعِ العَلِيمِ مِنَ الشَّيْطَانِ الرَّجِيمِ من همزه ونفخه ونفثه.", count: 1, virtue: "التعوذ الشرعي" },
-        { text: "أَعُوذُ بِكَلِمَاتِ اللَّهِ التَّامَّةِ مِنْ كُلِّ شَيْطَانٍ وَهَامَّةٍ، وَمِنْ كُلِّ عَيْنٍ لَامَّةٍ.", count: 3, virtue: "التحصين النبوي المبرك" },
-        { text: "بِسْمِ اللَّهِ أَرْقِيكَ، مِنْ كُلِّ شَيْءٍ يُؤْذِيكَ، مِنْ شَرِّ كُلِّ نَفْسٍ أَوْ عَيْنِ حَاسِدٍ، اللَّهُ يَشْفِيكَ، بِسْمِ اللَّهِ أَرْقِيكَ.", count: 3, virtue: "رقية جبريل للنبي صلى الله عليه وسلم" },
-        { text: "قراءة سورة الإالفة والمعوذتين والفاتحة وآية الكرسي.", count: 1, virtue: "الشفاء التام والوقاية بإذن الله" }
+        { text: "أَعُوذُ بِكَلِمَاتِ اللَّهِ التَّامَّةِ مِنْ كُلِّ شَيْطَانٍ وَهَامَّةٍ، وَمِنْ كُلِّ عَيْنٍ لَامَّةٍ.", count: 3, virtue: "التحصين النبوي" },
+        { text: "بِسْمِ اللَّهِ أَرْقِيكَ، مِنْ كُلِّ شَيْءٍ يُؤْذِيكَ، مِنْ شَرِّ كُلِّ نَفْسٍ أَوْ عَيْنِ حَاسِدٍ.", count: 3, virtue: "رقية الشفاء" }
       ]
     }
   };
 
-  let activeCounters = {};
+  let currentSectionKey = null;
+  let currentIndex = 0;
+  let remainingCount = 0;
 
   document.getElementById('enterAppBtn').addEventListener('click', function() {
-    document.getElementById('splash-screen').classList.add('hidden');
+    const splash = document.getElementById('splash-screen');
+    splash.classList.add('hidden');
   });
 
   document.getElementById('backBtn').addEventListener('click', function() {
@@ -506,59 +642,74 @@
     const data = sectionsData[sectionKey];
     if (!data) return;
 
+    currentSectionKey = sectionKey;
+    currentIndex = 0;
+    remainingCount = data.items[0].count;
+
     document.getElementById('headerTitle').innerText = data.title;
     document.getElementById('headerSub').innerText = "حصن المسلم - يوسف عباس";
     document.getElementById('backBtn').style.display = 'flex';
     document.getElementById('gridMenu').style.display = 'none';
+    document.getElementById('sectionView').classList.add('active');
+
+    updateActiveThikrView();
+  }
+
+  function updateActiveThikrView() {
+    const data = sectionsData[currentSectionKey];
+    const item = data.items[currentIndex];
+
+    document.getElementById('thikrTextDisplay').innerText = item.text;
+    document.getElementById('thikrVirtueDisplay').innerText = "فضل الذكر: " + item.virtue;
+    document.getElementById('sebhaCountDisplay').innerText = remainingCount;
     
-    const view = document.getElementById('sectionView');
-    view.classList.add('active');
+    // تحديث شريط التقدم
+    const progressPercent = ((currentIndex) / data.items.length) * 100;
+    document.getElementById('progressFill').style.width = progressPercent + '%';
+    document.getElementById('progressText').innerText = `ذكر ${currentIndex + 1} من ${data.items.length}`;
 
-    activeCounters[sectionKey] = {};
-    data.items.forEach((item, idx) => {
-      activeCounters[sectionKey][idx] = item.count;
-    });
-
-    renderSectionItems(sectionKey);
+    const btn = document.getElementById('giantSebhaBtn');
+    if (remainingCount <= 1) {
+      btn.classList.add('completed-state');
+      document.getElementById('sebhaLabelText').innerText = currentIndex === data.items.length - 1 ? "✨ تم بححمد الله (انقر للإعادة)" : "👇 انقر للانتقال للذكر التالي";
+    } else {
+      btn.classList.remove('completed-state');
+      document.getElementById('sebhaLabelText').innerText = "📿 اضغط للعد والسباحة";
+    }
   }
 
-  function renderSectionItems(sectionKey) {
-    const data = sectionsData[sectionKey];
-    const container = document.getElementById('athkarListContainer');
-    container.innerHTML = '';
+  function handleSebhaClick() {
+    const data = sectionsData[currentSectionKey];
+    
+    // تأثير نبض بصري خفيف عند النقر
+    const btn = document.getElementById('giantSebhaBtn');
+    btn.classList.remove('pulse-anim');
+    void btn.offsetWidth;
+    btn.classList.add('pulse-anim');
 
-    data.items.forEach((item, idx) => {
-      const remaining = activeCounters[sectionKey][idx];
-      const isDone = remaining === 0;
-
-      const card = document.createElement('div');
-      card.className = `thikr-card ${isDone ? 'completed' : ''}`;
-      
-      card.innerHTML = `
-        <div class="thikr-text">${item.text}</div>
-        <div class="thikr-info">
-          <span>فضل الذكر: ${item.virtue}</span>
-          <span>الهدف: ${item.count}</span>
-        </div>
-        <div class="big-counter-box">
-          <button class="big-sebha-btn ${isDone ? 'done' : ''}" onclick="decreaseCount('${sectionKey}', ${idx})">
-            <span>📿 اضغط للعد والسباحة</span>
-            <span class="count-badge">${isDone ? 'تم ✓' : remaining}</span>
-          </button>
-        </div>
-      `;
-      container.appendChild(card);
-    });
-  }
-
-  function decreaseCount(sectionKey, idx) {
-    if (activeCounters[sectionKey][idx] > 0) {
-      activeCounters[sectionKey][idx]--;
-      renderSectionItems(sectionKey);
+    if (remainingCount > 1) {
+      remainingCount--;
+      document.getElementById('sebhaCountDisplay').innerText = remainingCount;
+      if (remainingCount === 1) {
+        document.getElementById('sebhaLabelText').innerText = "👇 انقر للانتقال للذكر التالي";
+        btn.classList.add('completed-state');
+      }
+    } else {
+      // انتهى الذكر الحالي، انتقل للذكر التالي تلقائياً
+      currentIndex++;
+      if (currentIndex >= data.items.length) {
+        // العودة للرئيسية أو إعادة الورد عند انتهائه بالكامل
+        alert('تقبل الله طاعتكم! لقد أتممت أذكار هذا القسم بنجاح.');
+        goHome();
+        return;
+      }
+      remainingCount = data.items[currentIndex].count;
+      updateActiveThikrView();
     }
   }
 
   function goHome() {
+    currentSectionKey = null;
     document.getElementById('headerTitle').innerText = "حصن المسلم";
     document.getElementById('headerSub').innerText = "أذكار من صحيح السنة النبوية";
     document.getElementById('backBtn').style.display = 'none';
