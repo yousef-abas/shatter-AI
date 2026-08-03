@@ -1,15 +1,17 @@
 {
+  "id": "/Ryan/",
   "name": "تطبيق ريان للأذكار",
   "short_name": "ريان",
   "description": "تطبيق الأذكار الشاملة وحصن المسلم",
-  "start_url": "/index.html",
+  "start_url": "/Ryan/index.html",
+  "scope": "/Ryan/",
   "display": "standalone",
   "background_color": "#070b19",
   "theme_color": "#0f172a",
   "orientation": "portrait",
   "icons": [
     {
-      "src": "icon-512.png",
+      "src": "./icon.png",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "any maskable"
