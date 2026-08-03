@@ -9,6 +9,8 @@
   "background_color": "#070b19",
   "theme_color": "#0f172a",
   "orientation": "portrait",
+  "dir": "rtl",
+  "lang": "ar",
   "categories": ["education", "books", "utilities"],
   "prefer_related_applications": false,
   "icons": [
