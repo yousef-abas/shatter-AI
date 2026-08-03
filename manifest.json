@@ -30,7 +30,7 @@
     },
     {
       "src": "./image1.png",
-      "sizes": "448x874",
+      "sizes": "445x873",
       "type": "image/png",
       "form_factor": "narrow"
     }
