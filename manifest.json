@@ -10,6 +10,7 @@
   "theme_color": "#0f172a",
   "orientation": "portrait",
   "categories": ["education", "books", "utilities"],
+  "prefer_related_applications": false,
   "icons": [
     {
       "src": "./icon.png",
